@@ -28,6 +28,9 @@ public class getCompany extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+        listOfCompany = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : ((javax.persistence.Query)null).getResultList();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Izvēlieties firmu, kurā importēsiet dokumentus");
 
@@ -82,5 +85,7 @@ public class getCompany extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.persistence.EntityManager entityManager;
+    private java.util.List listOfCompany;
     // End of variables declaration//GEN-END:variables
 }
