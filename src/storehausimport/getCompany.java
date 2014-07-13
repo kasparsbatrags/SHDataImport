@@ -7,8 +7,11 @@
 package storehausimport;
 
 import java.awt.event.KeyEvent;
-import javax.swing.JRootPane;
-
+import java.util.ArrayList;
+import static java.util.Collections.list;
+import java.util.List;
+import javax.swing.JOptionPane;
+import static storehausimport.mainFrame.logger;
 /**
  *
  * @author Kaspars
@@ -44,6 +47,7 @@ public class getCompany extends javax.swing.JFrame {
             };
         };
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Izvēlieties firmu, kurā importēsiet dokumentus");
@@ -53,7 +57,9 @@ public class getCompany extends javax.swing.JFrame {
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("True"), this, org.jdesktop.beansbinding.BeanProperty.create("undecorated"));
         bindingGroup.addBinding(binding);
 
+        jTableListOfCompany.setColumnSelectionAllowed(true);
         jTableListOfCompany.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTableListOfCompany.getTableHeader().setReorderingAllowed(false);
 
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, firmasList, jTableListOfCompany, "JtableListOfCompany");
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nosaukums}"));
@@ -64,18 +70,31 @@ public class getCompany extends javax.swing.JFrame {
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
+        jTableListOfCompany.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jTableListOfCompanyMouseMoved(evt);
+            }
+        });
         jTableListOfCompany.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTableListOfCompanyKeyPressed(evt);
             }
         });
         jScrollPane1.setViewportView(jTableListOfCompany);
+        jTableListOfCompany.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         jButton1.setText("Aizvērt");
         jButton1.setToolTipText("Aizvērt logu, atlikt darbību");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Apstiprināt");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -86,6 +105,8 @@ public class getCompany extends javax.swing.JFrame {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
@@ -94,7 +115,9 @@ public class getCompany extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -106,6 +129,7 @@ public class getCompany extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -116,6 +140,22 @@ public class getCompany extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jTableListOfCompanyKeyPressed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        int[] selected = jTableListOfCompany.getSelectedRows();
+        if (selected.length>1){
+            JOptionPane.showMessageDialog(null,"izvēlieties tikai vienu firmuā importēsiet dokumentus!");
+            return;
+        }
+        entity.Firmas thisCompanieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
+        this.dispose();
+            
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTableListOfCompanyMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseMoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableListOfCompanyMouseMoved
 
     /**
      * @param args the command line arguments
@@ -159,6 +199,7 @@ public class getCompany extends javax.swing.JFrame {
     private java.util.List<entity.Firmas> firmasList;
     private javax.persistence.Query firmasQuery;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableListOfCompany;
     private javax.persistence.EntityManager storeHausImportPUEntityManager;

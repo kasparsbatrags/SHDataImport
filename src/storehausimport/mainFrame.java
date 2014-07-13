@@ -29,6 +29,8 @@ public class mainFrame extends javax.swing.JFrame {
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
     public String selectedCompany;
+    public entity.Firmas thisCompanieForImport;
+    
 
         
     /**
@@ -250,6 +252,11 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void buttonChooseCompanieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChooseCompanieActionPerformed
         // TODO add your handling code here:
+        thisCompanieForImport=null;
+        getCompany getcompany = new getCompany();
+        getcompany.setVisible(true);
+        
+        
     }//GEN-LAST:event_buttonChooseCompanieActionPerformed
 
     /**

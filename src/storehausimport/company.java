@@ -75,6 +75,8 @@ public class company extends JPanel {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), nosaukumsField, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
+        nosaukumsField.addActionListener(formListener);
+
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.paskaidroj}"), paskaidrojField, org.jdesktop.beansbinding.BeanProperty.create("text"));
         binding.setSourceUnreadableValue("null");
         bindingGroup.addBinding(binding);
@@ -168,6 +170,9 @@ public class company extends JPanel {
             else if (evt.getSource() == deleteButton) {
                 company.this.deleteButtonActionPerformed(evt);
             }
+            else if (evt.getSource() == nosaukumsField) {
+                company.this.nosaukumsFieldActionPerformed(evt);
+            }
         }
     }// </editor-fold>//GEN-END:initComponents
 
@@ -220,6 +225,10 @@ public class company extends JPanel {
             list.addAll(merged);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void nosaukumsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nosaukumsFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nosaukumsFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
