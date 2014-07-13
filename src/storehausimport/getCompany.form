@@ -14,6 +14,9 @@
           <ComponentRef name="storeHausImportPUEntityManager"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : storeHausImportPUEntityManager.createQuery(&quot;SELECT f FROM Firmas f order by f.nosaukums&quot;)"/>
+      </AuxValues>
     </Component>
     <Component class="java.util.List" name="firmasList">
       <Properties>
@@ -29,6 +32,7 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="title" type="java.lang.String" value="Izv&#x113;lieties firmu, kur&#x101; import&#x113;siet dokumentus"/>
+    <Property name="name" type="java.lang.String" value="frameListOfCompanie" noResource="true"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <BindingProperties>
@@ -80,7 +84,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="jTableListOfCompany">
           <Properties>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
@@ -96,21 +100,33 @@
                 </Column>
               </TableColumnModel>
             </Property>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Default Cursor"/>
+            </Property>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
           <BindingProperties>
-            <BindingProperty name="elements" source="firmasList" target="jTable1" targetPath="elements" updateStrategy="0" immediately="true">
+            <BindingProperty name="elements" source="firmasList" target="jTableListOfCompany" targetPath="elements" updateStrategy="0" immediately="true">
               <Property name="name" type="java.lang.String" value="JtableListOfCompany"/>
               <Subbinding sourcePath="${nosaukums}">
+                <BindingParameter name="NAME" value="Nosaukums"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
               </Subbinding>
               <Subbinding sourcePath="${paskaidroj}">
+                <BindingParameter name="NAME" value="Paskaidrojums"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
               </Subbinding>
             </BindingProperty>
           </BindingProperties>
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTableListOfCompanyKeyPressed"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="private static final long serialVersionUID = 1L;&#xa;public boolean isCellEditable(int row, int column) {                &#xa;                return false;               &#xa;        };&#xa;};"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

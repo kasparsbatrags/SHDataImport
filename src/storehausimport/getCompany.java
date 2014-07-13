@@ -22,6 +22,7 @@ public class getCompany extends javax.swing.JFrame {
         initComponents();
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,29 +34,42 @@ public class getCompany extends javax.swing.JFrame {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         storeHausImportPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-        firmasQuery = java.beans.Beans.isDesignTime() ? null : storeHausImportPUEntityManager.createQuery("SELECT f FROM Firmas f");
+        firmasQuery = java.beans.Beans.isDesignTime() ? null : storeHausImportPUEntityManager.createQuery("SELECT f FROM Firmas f order by f.nosaukums");
         firmasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : firmasQuery.getResultList();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableListOfCompany = new javax.swing.JTable(){;
+            private static final long serialVersionUID = 1L;
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            };
+        };
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Izvēlieties firmu, kurā importēsiet dokumentus");
+        setName("frameListOfCompanie"); // NOI18N
         setResizable(false);
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("True"), this, org.jdesktop.beansbinding.BeanProperty.create("undecorated"));
         bindingGroup.addBinding(binding);
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, firmasList, jTable1, "JtableListOfCompany");
+        jTableListOfCompany.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, firmasList, jTableListOfCompany, "JtableListOfCompany");
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nosaukums}"));
         columnBinding.setColumnName("Nosaukums");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${paskaidroj}"));
-        columnBinding.setColumnName("Paskaidroj");
+        columnBinding.setColumnName("Paskaidrojums");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
-        jScrollPane1.setViewportView(jTable1);
+        jTableListOfCompany.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTableListOfCompanyKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableListOfCompany);
 
         jButton1.setText("Aizvērt");
         jButton1.setToolTipText("Aizvērt logu, atlikt darbību");
@@ -92,8 +106,16 @@ public class getCompany extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTableListOfCompanyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableListOfCompanyKeyPressed
+        // TODO add your handling code here: 
+        if (evt.getKeyCode () == KeyEvent.VK_ESCAPE) {
+            this.dispose();
+        }
+        
+    }//GEN-LAST:event_jTableListOfCompanyKeyPressed
 
     /**
      * @param args the command line arguments
@@ -124,10 +146,11 @@ public class getCompany extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            
             public void run() {
                 
                 new getCompany().setVisible(true);
-           
+                
             }
         });
     }
@@ -137,15 +160,8 @@ public class getCompany extends javax.swing.JFrame {
     private javax.persistence.Query firmasQuery;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableListOfCompany;
     private javax.persistence.EntityManager storeHausImportPUEntityManager;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-
-     public void keyPressed(KeyEvent k) {      
-          if (k.getKeyCode () == KeyEvent.VK_ESCAPE) {
-             this.dispose();
-          }
-                   
-    }
 }
