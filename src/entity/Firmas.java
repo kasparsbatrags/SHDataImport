@@ -6,6 +6,8 @@
 
 package entity;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -17,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -52,6 +55,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Firmas.findByIsSql", query = "SELECT f FROM Firmas f WHERE f.isSql = :isSql"),
     @NamedQuery(name = "Firmas.findByDatGatv", query = "SELECT f FROM Firmas f WHERE f.datGatv = :datGatv")})
 public class Firmas implements Serializable {
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -159,7 +164,9 @@ public class Firmas implements Serializable {
     }
 
     public void setFirma(String firma) {
+        String oldFirma = this.firma;
         this.firma = firma;
+        changeSupport.firePropertyChange("firma", oldFirma, firma);
     }
 
     public String getNosaukums() {
@@ -167,7 +174,9 @@ public class Firmas implements Serializable {
     }
 
     public void setNosaukums(String nosaukums) {
+        String oldNosaukums = this.nosaukums;
         this.nosaukums = nosaukums;
+        changeSupport.firePropertyChange("nosaukums", oldNosaukums, nosaukums);
     }
 
     public String getLietotaji() {
@@ -175,7 +184,9 @@ public class Firmas implements Serializable {
     }
 
     public void setLietotaji(String lietotaji) {
+        String oldLietotaji = this.lietotaji;
         this.lietotaji = lietotaji;
+        changeSupport.firePropertyChange("lietotaji", oldLietotaji, lietotaji);
     }
 
     public String getPamKat() {
@@ -183,7 +194,9 @@ public class Firmas implements Serializable {
     }
 
     public void setPamKat(String pamKat) {
+        String oldPamKat = this.pamKat;
         this.pamKat = pamKat;
+        changeSupport.firePropertyChange("pamKat", oldPamKat, pamKat);
     }
 
     public String getFormKat() {
@@ -191,7 +204,9 @@ public class Firmas implements Serializable {
     }
 
     public void setFormKat(String formKat) {
+        String oldFormKat = this.formKat;
         this.formKat = formKat;
+        changeSupport.firePropertyChange("formKat", oldFormKat, formKat);
     }
 
     public String getDatKat() {
@@ -199,7 +214,9 @@ public class Firmas implements Serializable {
     }
 
     public void setDatKat(String datKat) {
+        String oldDatKat = this.datKat;
         this.datKat = datKat;
+        changeSupport.firePropertyChange("datKat", oldDatKat, datKat);
     }
 
     public String getTmpKat() {
@@ -207,7 +224,9 @@ public class Firmas implements Serializable {
     }
 
     public void setTmpKat(String tmpKat) {
+        String oldTmpKat = this.tmpKat;
         this.tmpKat = tmpKat;
+        changeSupport.firePropertyChange("tmpKat", oldTmpKat, tmpKat);
     }
 
     public String getSaitKat() {
@@ -215,7 +234,9 @@ public class Firmas implements Serializable {
     }
 
     public void setSaitKat(String saitKat) {
+        String oldSaitKat = this.saitKat;
         this.saitKat = saitKat;
+        changeSupport.firePropertyChange("saitKat", oldSaitKat, saitKat);
     }
 
     public String getAlgKat() {
@@ -223,7 +244,9 @@ public class Firmas implements Serializable {
     }
 
     public void setAlgKat(String algKat) {
+        String oldAlgKat = this.algKat;
         this.algKat = algKat;
+        changeSupport.firePropertyChange("algKat", oldAlgKat, algKat);
     }
 
     public String getPamlKat() {
@@ -231,7 +254,9 @@ public class Firmas implements Serializable {
     }
 
     public void setPamlKat(String pamlKat) {
+        String oldPamlKat = this.pamlKat;
         this.pamlKat = pamlKat;
+        changeSupport.firePropertyChange("pamlKat", oldPamlKat, pamlKat);
     }
 
     public String getNolKat() {
@@ -239,7 +264,9 @@ public class Firmas implements Serializable {
     }
 
     public void setNolKat(String nolKat) {
+        String oldNolKat = this.nolKat;
         this.nolKat = nolKat;
+        changeSupport.firePropertyChange("nolKat", oldNolKat, nolKat);
     }
 
     public String getStrKat() {
@@ -247,7 +274,9 @@ public class Firmas implements Serializable {
     }
 
     public void setStrKat(String strKat) {
+        String oldStrKat = this.strKat;
         this.strKat = strKat;
+        changeSupport.firePropertyChange("strKat", oldStrKat, strKat);
     }
 
     public String getVad() {
@@ -255,7 +284,9 @@ public class Firmas implements Serializable {
     }
 
     public void setVad(String vad) {
+        String oldVad = this.vad;
         this.vad = vad;
+        changeSupport.firePropertyChange("vad", oldVad, vad);
     }
 
     public String getGram() {
@@ -263,7 +294,9 @@ public class Firmas implements Serializable {
     }
 
     public void setGram(String gram) {
+        String oldGram = this.gram;
         this.gram = gram;
+        changeSupport.firePropertyChange("gram", oldGram, gram);
     }
 
     public String getKas() {
@@ -271,7 +304,9 @@ public class Firmas implements Serializable {
     }
 
     public void setKas(String kas) {
+        String oldKas = this.kas;
         this.kas = kas;
+        changeSupport.firePropertyChange("kas", oldKas, kas);
     }
 
     public String getPaskaidroj() {
@@ -279,7 +314,9 @@ public class Firmas implements Serializable {
     }
 
     public void setPaskaidroj(String paskaidroj) {
+        String oldPaskaidroj = this.paskaidroj;
         this.paskaidroj = paskaidroj;
+        changeSupport.firePropertyChange("paskaidroj", oldPaskaidroj, paskaidroj);
     }
 
     public String getCwtemplate() {
@@ -287,7 +324,9 @@ public class Firmas implements Serializable {
     }
 
     public void setCwtemplate(String cwtemplate) {
+        String oldCwtemplate = this.cwtemplate;
         this.cwtemplate = cwtemplate;
+        changeSupport.firePropertyChange("cwtemplate", oldCwtemplate, cwtemplate);
     }
 
     public String getLogo() {
@@ -295,7 +334,9 @@ public class Firmas implements Serializable {
     }
 
     public void setLogo(String logo) {
+        String oldLogo = this.logo;
         this.logo = logo;
+        changeSupport.firePropertyChange("logo", oldLogo, logo);
     }
 
     public String getVid() {
@@ -303,7 +344,9 @@ public class Firmas implements Serializable {
     }
 
     public void setVid(String vid) {
+        String oldVid = this.vid;
         this.vid = vid;
+        changeSupport.firePropertyChange("vid", oldVid, vid);
     }
 
     public String getSqlServer() {
@@ -311,7 +354,9 @@ public class Firmas implements Serializable {
     }
 
     public void setSqlServer(String sqlServer) {
+        String oldSqlServer = this.sqlServer;
         this.sqlServer = sqlServer;
+        changeSupport.firePropertyChange("sqlServer", oldSqlServer, sqlServer);
     }
 
     public String getSqlDb() {
@@ -319,7 +364,9 @@ public class Firmas implements Serializable {
     }
 
     public void setSqlDb(String sqlDb) {
+        String oldSqlDb = this.sqlDb;
         this.sqlDb = sqlDb;
+        changeSupport.firePropertyChange("sqlDb", oldSqlDb, sqlDb);
     }
 
     public Boolean getIsSql() {
@@ -327,7 +374,9 @@ public class Firmas implements Serializable {
     }
 
     public void setIsSql(Boolean isSql) {
+        Boolean oldIsSql = this.isSql;
         this.isSql = isSql;
+        changeSupport.firePropertyChange("isSql", oldIsSql, isSql);
     }
 
     public Date getDatGatv() {
@@ -335,7 +384,9 @@ public class Firmas implements Serializable {
     }
 
     public void setDatGatv(Date datGatv) {
+        Date oldDatGatv = this.datGatv;
         this.datGatv = datGatv;
+        changeSupport.firePropertyChange("datGatv", oldDatGatv, datGatv);
     }
 
     @Override
@@ -361,6 +412,14 @@ public class Firmas implements Serializable {
     @Override
     public String toString() {
         return "entity.Firmas[ firma=" + firma + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }
