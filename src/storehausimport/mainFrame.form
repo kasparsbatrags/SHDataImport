@@ -28,61 +28,85 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="buttonChoseFile" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="labelXmlFilePath" min="-2" pref="130" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="buttonImportData" min="-2" pref="101" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="labelFileRecordsInfo" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="labelSelectedXmlFile" max="32767" attributes="0"/>
-                          <Component id="jScrollPane1" pref="471" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="buttonCloseApp" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="buttonChooseCompanie" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                  <Component id="buttonChoseFile" min="-2" pref="110" max="-2" attributes="0"/>
+                  <Component id="buttonImportData" min="-2" pref="110" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="labelFileRecordsInfo" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelXmlFilePath" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                  <Component id="labelXmlFilePath1" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="labelSelectedCompany" alignment="0" pref="471" max="32767" attributes="0"/>
+                  <Component id="labelSelectedXmlFile" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="471" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace pref="668" max="32767" attributes="0"/>
+              <Component id="buttonCloseApp" min="-2" pref="110" max="-2" attributes="0"/>
+              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="labelXmlFilePath" alignment="3" max="32767" attributes="0"/>
+                  <Component id="buttonChooseCompanie" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelXmlFilePath1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelSelectedCompany" alignment="3" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelXmlFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="labelSelectedXmlFile" alignment="3" max="32767" attributes="0"/>
                   <Component id="buttonChoseFile" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="labelFileRecordsInfo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="buttonImportData" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane1" min="-2" pref="120" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="272" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="297" max="-2" attributes="0"/>
               <Component id="buttonCloseApp" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
+    <Component class="javax.swing.JToggleButton" name="buttonChooseCompanie">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Izv&#x113;l&#x113;ties firmu"/>
+        <Property name="toolTipText" type="java.lang.String" value="Izv&#x113;l&#x113;ties firmu, kur&#x101; import&#x113;siet dokumentus"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChooseCompanieActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="mainFrame_buttonChooseCompanie"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="labelSelectedCompany">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="labelSelectedCompanyActionPerformed"/>
+      </Events>
+    </Component>
     <Component class="javax.swing.JLabel" name="labelFileRecordsInfo">
       <Properties>
         <Property name="text" type="java.lang.String" value="Inform&#x101;cija par ierakstiem fail&#x101;:"/>
@@ -154,6 +178,15 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCloseAppActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelXmlFilePath1">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="Imort&#x113;&#x161;ana notiks:"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+        <Property name="enabled" type="boolean" value="false"/>
+        <Property name="name" type="java.lang.String" value="xmlfilePathLabel" noResource="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
