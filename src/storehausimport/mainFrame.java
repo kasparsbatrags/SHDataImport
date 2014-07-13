@@ -47,56 +47,59 @@ public class mainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fileRecordsInfoLabel = new javax.swing.JLabel();
-        choseFileButton = new javax.swing.JButton();
-        xmlFilePathLabel = new javax.swing.JLabel();
-        selectedXmlFileLabel = new javax.swing.JTextField();
-        importDataButton = new javax.swing.JButton();
+        labelFileRecordsInfo = new javax.swing.JLabel();
+        buttonChoseFile = new javax.swing.JButton();
+        labelXmlFilePath = new javax.swing.JLabel();
+        labelSelectedXmlFile = new javax.swing.JTextField();
+        buttonImportData = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        fileRecordsInfoPanel = new javax.swing.JTextPane();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        PanelFileRecordsInfo = new javax.swing.JTextPane();
+        buttonCloseApp = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(779, 472));
         setName("mainFrame"); // NOI18N
 
-        fileRecordsInfoLabel.setText("Informācija par ierakstiem failā:");
-        fileRecordsInfoLabel.setEnabled(false);
+        labelFileRecordsInfo.setText("Informācija par ierakstiem failā:");
+        labelFileRecordsInfo.setEnabled(false);
 
-        choseFileButton.setText("Izvēlēties failu");
-        choseFileButton.setToolTipText("Izvēlieties failu, kurā galbājas no StoreHaus eksportētie faili.");
-        choseFileButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonChoseFile.setText("Izvēlēties failu");
+        buttonChoseFile.setToolTipText("Izvēlieties failu, kurā galbājas no StoreHaus eksportētie faili.");
+        buttonChoseFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                choseFileButtonActionPerformed(evt);
+                buttonChoseFileActionPerformed(evt);
             }
         });
 
-        xmlFilePathLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        xmlFilePathLabel.setText("Izvēlētais fails:");
-        xmlFilePathLabel.setEnabled(false);
-        xmlFilePathLabel.setName("xmlfilePathLabel"); // NOI18N
+        labelXmlFilePath.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelXmlFilePath.setText("Izvēlētais fails:");
+        labelXmlFilePath.setEnabled(false);
+        labelXmlFilePath.setName("xmlfilePathLabel"); // NOI18N
 
-        selectedXmlFileLabel.setEditable(false);
-        selectedXmlFileLabel.setEnabled(false);
-        selectedXmlFileLabel.addActionListener(new java.awt.event.ActionListener() {
+        labelSelectedXmlFile.setEditable(false);
+        labelSelectedXmlFile.setEnabled(false);
+        labelSelectedXmlFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectedXmlFileLabelActionPerformed(evt);
+                labelSelectedXmlFileActionPerformed(evt);
             }
         });
 
-        importDataButton.setText("Importēt");
-        importDataButton.setToolTipText("Importēt failu grāmatvedības sistēmā");
-        importDataButton.setEnabled(false);
+        buttonImportData.setText("Importēt");
+        buttonImportData.setToolTipText("Importēt failu grāmatvedības sistēmā");
+        buttonImportData.setEnabled(false);
 
-        fileRecordsInfoPanel.setEditable(false);
-        fileRecordsInfoPanel.setEnabled(false);
-        jScrollPane1.setViewportView(fileRecordsInfoPanel);
+        PanelFileRecordsInfo.setEditable(false);
+        PanelFileRecordsInfo.setEnabled(false);
+        jScrollPane1.setViewportView(PanelFileRecordsInfo);
 
-        jToggleButton1.setText("Beigt darbu");
-        jToggleButton1.setToolTipText("Begt darbu aizvērt aplikāciju");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonCloseApp.setText("Beigt darbu");
+        buttonCloseApp.setToolTipText("Begt darbu aizvērt aplikāciju");
+        buttonCloseApp.setMaximumSize(new java.awt.Dimension(101, 23));
+        buttonCloseApp.setMinimumSize(new java.awt.Dimension(101, 23));
+        buttonCloseApp.setPreferredSize(new java.awt.Dimension(101, 23));
+        buttonCloseApp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
+                buttonCloseAppActionPerformed(evt);
             }
         });
 
@@ -110,20 +113,20 @@ public class mainFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(choseFileButton)
+                                .addComponent(buttonChoseFile)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(xmlFilePathLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(labelXmlFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(importDataButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(buttonImportData, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(fileRecordsInfoLabel)))
+                                .addComponent(labelFileRecordsInfo)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(selectedXmlFileLabel)
+                            .addComponent(labelSelectedXmlFile)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jToggleButton1)))
+                        .addComponent(buttonCloseApp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -131,17 +134,17 @@ public class mainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(105, 105, 105)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(xmlFilePathLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(selectedXmlFileLabel)
-                    .addComponent(choseFileButton))
+                    .addComponent(labelXmlFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelSelectedXmlFile)
+                    .addComponent(buttonChoseFile))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(fileRecordsInfoLabel)
-                        .addComponent(importDataButton))
+                        .addComponent(labelFileRecordsInfo)
+                        .addComponent(buttonImportData))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(272, 272, 272)
-                .addComponent(jToggleButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
+                .addComponent(buttonCloseApp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -149,7 +152,7 @@ public class mainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void choseFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_choseFileButtonActionPerformed
+    private void buttonChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChoseFileActionPerformed
         // TODO add your handling code here:
 
         FileNameExtensionFilter filter = new FileNameExtensionFilter("xml - StoreHaus fails", "xml");
@@ -162,53 +165,53 @@ public class mainFrame extends javax.swing.JFrame {
         int returnVal = chooser.showOpenDialog(mainFrame.this);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
            xmlFileWithFullPath=chooser.getSelectedFile().toString();
-           mainFrame.this.selectedXmlFileLabel.setText(xmlFileWithFullPath);
-           this.xmlFilePathLabel.setEnabled(!xmlFileWithFullPath.isEmpty());
-           this.selectedXmlFileLabel.setEnabled(!xmlFileWithFullPath.isEmpty());
+           mainFrame.this.labelSelectedXmlFile.setText(xmlFileWithFullPath);
+           this.labelXmlFilePath.setEnabled(!xmlFileWithFullPath.isEmpty());
+           this.labelSelectedXmlFile.setEnabled(!xmlFileWithFullPath.isEmpty());
            try {
                 StoreHausFile sht =new StoreHausFile(xmlFileWithFullPath);
                 String fileRecordsInfo="";
-                this.fileRecordsInfoPanel.setText(fileRecordsInfo);
-                this.importDataButton.setEnabled(!fileRecordsInfo.isEmpty());
-                this.fileRecordsInfoLabel.setEnabled(!fileRecordsInfo.isEmpty());
+                this.PanelFileRecordsInfo.setText(fileRecordsInfo);
+                this.buttonImportData.setEnabled(!fileRecordsInfo.isEmpty());
+                this.labelFileRecordsInfo.setEnabled(!fileRecordsInfo.isEmpty());
                 fileRecordsInfo=sht.getFileInfo();
-                this.fileRecordsInfoPanel.setText(fileRecordsInfo);
-                this.fileRecordsInfoPanel.setEnabled(!fileRecordsInfo.isEmpty());
-                this.importDataButton.setEnabled(!fileRecordsInfo.isEmpty());
-                this.fileRecordsInfoLabel.setEnabled(!fileRecordsInfo.isEmpty());
+                this.PanelFileRecordsInfo.setText(fileRecordsInfo);
+                this.PanelFileRecordsInfo.setEnabled(!fileRecordsInfo.isEmpty());
+                this.buttonImportData.setEnabled(!fileRecordsInfo.isEmpty());
+                this.labelFileRecordsInfo.setEnabled(!fileRecordsInfo.isEmpty());
 
 
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,ex.getMessage());
-                logger.info(ex.getMessage()+" "+selectedXmlFileLabel);
+                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (SAXException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,"Kļūda faila "+xmlFileWithFullPath+" struktūrā!"+"\n"+ex.getMessage());
-                logger.info(ex.getMessage()+" "+selectedXmlFileLabel);
+                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (IOException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,"Kļūda faila "+xmlFileWithFullPath+" nolasīšanā! "+"\n"+ex.getMessage());
-                logger.info(ex.getMessage()+" "+selectedXmlFileLabel);
+                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (Exception ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
-                logger.info(ex.getMessage()+" "+selectedXmlFileLabel);
+                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
                 JOptionPane.showMessageDialog(null,"Kļūda! Fails "+xmlFileWithFullPath+" neatbilst noteiktai StoreHaus struktūrai! "+"\n"+ex.getMessage());
             }
            
 
             
         }
-    }//GEN-LAST:event_choseFileButtonActionPerformed
+    }//GEN-LAST:event_buttonChoseFileActionPerformed
 
-    private void selectedXmlFileLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedXmlFileLabelActionPerformed
+    private void labelSelectedXmlFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelSelectedXmlFileActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_selectedXmlFileLabelActionPerformed
+    }//GEN-LAST:event_labelSelectedXmlFileActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void buttonCloseAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCloseAppActionPerformed
         // TODO add your handling code here:
         this.dispose();
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+    }//GEN-LAST:event_buttonCloseAppActionPerformed
 
     /**
      * @param args the command line arguments
@@ -260,13 +263,13 @@ public class mainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton choseFileButton;
-    private javax.swing.JLabel fileRecordsInfoLabel;
-    private javax.swing.JTextPane fileRecordsInfoPanel;
-    private javax.swing.JButton importDataButton;
+    private javax.swing.JTextPane PanelFileRecordsInfo;
+    private javax.swing.JButton buttonChoseFile;
+    private javax.swing.JToggleButton buttonCloseApp;
+    private javax.swing.JButton buttonImportData;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JTextField selectedXmlFileLabel;
-    private javax.swing.JLabel xmlFilePathLabel;
+    private javax.swing.JLabel labelFileRecordsInfo;
+    private javax.swing.JTextField labelSelectedXmlFile;
+    private javax.swing.JLabel labelXmlFilePath;
     // End of variables declaration//GEN-END:variables
 }
