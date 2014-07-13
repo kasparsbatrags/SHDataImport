@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[779, 472]"/>
+    </Property>
+    <Property name="name" type="java.lang.String" value="mainFrame" noResource="true"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="choseFileButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="xmlFilePathLabel" min="-2" pref="130" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="importDataButton" min="-2" pref="101" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="fileRecordsInfoLabel" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="selectedXmlFileLabel" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="471" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="closeAppButton1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="xmlFilePathLabel" alignment="3" max="32767" attributes="0"/>
+                  <Component id="selectedXmlFileLabel" alignment="3" max="32767" attributes="0"/>
+                  <Component id="choseFileButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="fileRecordsInfoLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="importDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="jScrollPane1" min="-2" pref="120" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="246" max="-2" attributes="0"/>
+              <Component id="closeAppButton1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="fileRecordsInfoLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Inform&#x101;cija par ierakstiem fail&#x101;:"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="choseFileButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Izv&#x113;l&#x113;ties failu"/>
+        <Property name="toolTipText" type="java.lang.String" value="Izv&#x113;lieties failu, kur&#x101; galb&#x101;jas no StoreHaus eksport&#x113;tie faili."/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="choseFileButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="xmlFilePathLabel">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="Izv&#x113;l&#x113;tais fails:"/>
+        <Property name="name" type="java.lang.String" value="xmlfilePathLabel" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="selectedXmlFileLabel">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectedXmlFileLabelActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="importDataButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Import&#x113;t"/>
+        <Property name="toolTipText" type="java.lang.String" value="Import&#x113;t failu gr&#x101;matved&#x12b;bas sist&#x113;m&#x101;"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextPane" name="fileRecordsInfoPanel">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JButton" name="closeAppButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Beigt darbu"/>
+        <Property name="toolTipText" type="java.lang.String" value="Beigt darbu, aizv&#x113;rt aplik&#x101;ciju"/>
+        <Property name="actionCommand" type="java.lang.String" value=""/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeAppButton1ActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>
