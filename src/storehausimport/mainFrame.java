@@ -1,5 +1,6 @@
 package storehausimport;
 
+import entity.Firmas;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -28,8 +29,9 @@ public class mainFrame extends javax.swing.JFrame {
     static FileHandler fh;  
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
-    public String selectedCompany;
-    public entity.Firmas thisCompanieForImport;
+    public String selectedCompanyText;
+    public entity.Firmas companieForImport=null;
+
     
 
         
@@ -50,8 +52,7 @@ public class mainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonChooseCompanie = new javax.swing.JToggleButton();
-        labelSelectedCompany = new javax.swing.JTextField();
+        jtextSelectedCompany = new javax.swing.JTextField();
         labelFileRecordsInfo = new javax.swing.JLabel();
         buttonChoseFile = new javax.swing.JButton();
         labelXmlFilePath = new javax.swing.JLabel();
@@ -60,25 +61,18 @@ public class mainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         PanelFileRecordsInfo = new javax.swing.JTextPane();
         buttonCloseApp = new javax.swing.JToggleButton();
-        labelXmlFilePath1 = new javax.swing.JLabel();
+        labelSelectedCompany = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(779, 472));
         setName("mainFrame"); // NOI18N
 
-        buttonChooseCompanie.setText("Izvēlēties firmu");
-        buttonChooseCompanie.setToolTipText("Izvēlēties firmu, kurā importēsiet dokumentus");
-        buttonChooseCompanie.addActionListener(new java.awt.event.ActionListener() {
+        jtextSelectedCompany.setEditable(false);
+        jtextSelectedCompany.setEnabled(false);
+        jtextSelectedCompany.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonChooseCompanieActionPerformed(evt);
-            }
-        });
-
-        labelSelectedCompany.setEditable(false);
-        labelSelectedCompany.setEnabled(false);
-        labelSelectedCompany.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                labelSelectedCompanyActionPerformed(evt);
+                jtextSelectedCompanyActionPerformed(evt);
             }
         });
 
@@ -87,6 +81,7 @@ public class mainFrame extends javax.swing.JFrame {
 
         buttonChoseFile.setText("Izvēlēties failu");
         buttonChoseFile.setToolTipText("Izvēlieties failu, kurā galbājas no StoreHaus eksportētie faili.");
+        buttonChoseFile.setEnabled(false);
         buttonChoseFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonChoseFileActionPerformed(evt);
@@ -125,11 +120,19 @@ public class mainFrame extends javax.swing.JFrame {
             }
         });
 
-        labelXmlFilePath1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelXmlFilePath1.setText("Imortēšana notiks:");
-        labelXmlFilePath1.setToolTipText("");
-        labelXmlFilePath1.setEnabled(false);
-        labelXmlFilePath1.setName("xmlfilePathLabel"); // NOI18N
+        labelSelectedCompany.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelSelectedCompany.setText("Imortēšana notiks firmā:");
+        labelSelectedCompany.setToolTipText("");
+        labelSelectedCompany.setEnabled(false);
+        labelSelectedCompany.setName("xmlfilePathLabel"); // NOI18N
+
+        jButton1.setText("Izvēlēties firmu");
+        jButton1.setToolTipText("Izvēlētiesfirmu, kurā importēsiet dokumentus");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,18 +140,18 @@ public class mainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonChooseCompanie, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonImportData, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonChoseFile, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                    .addComponent(buttonImportData, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelFileRecordsInfo)
                     .addComponent(labelXmlFilePath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelXmlFilePath1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelSelectedCompany, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelSelectedCompany, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                    .addComponent(jtextSelectedCompany, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
                     .addComponent(labelSelectedXmlFile)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
                 .addContainerGap())
@@ -162,9 +165,9 @@ public class mainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonChooseCompanie)
-                    .addComponent(labelXmlFilePath1)
-                    .addComponent(labelSelectedCompany))
+                    .addComponent(labelSelectedCompany)
+                    .addComponent(jtextSelectedCompany)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelXmlFilePath)
@@ -246,18 +249,22 @@ public class mainFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_buttonCloseAppActionPerformed
 
-    private void labelSelectedCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelSelectedCompanyActionPerformed
+    private void jtextSelectedCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtextSelectedCompanyActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_labelSelectedCompanyActionPerformed
+    }//GEN-LAST:event_jtextSelectedCompanyActionPerformed
 
-    private void buttonChooseCompanieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChooseCompanieActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        thisCompanieForImport=null;
-        getCompany getcompany = new getCompany();
-        getcompany.setVisible(true);
+        CompanieForImport selectedComanieForImport = new CompanieForImport();
+        selectedComanieForImport.setcompanieForImport(companieForImport);
+        selectedComanieForImport.setJtextSelectedCompany(jtextSelectedCompany);
+        selectedComanieForImport.setVisible(true);
+        this.labelSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
+        this.jtextSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
+        this.buttonChoseFile.setEnabled(!selectedComanieForImport.equals(null));
         
         
-    }//GEN-LAST:event_buttonChooseCompanieActionPerformed
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -310,15 +317,15 @@ public class mainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane PanelFileRecordsInfo;
-    private javax.swing.JToggleButton buttonChooseCompanie;
     private javax.swing.JButton buttonChoseFile;
     private javax.swing.JToggleButton buttonCloseApp;
     private javax.swing.JButton buttonImportData;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JTextField jtextSelectedCompany;
     private javax.swing.JLabel labelFileRecordsInfo;
-    private javax.swing.JTextField labelSelectedCompany;
+    private javax.swing.JLabel labelSelectedCompany;
     private javax.swing.JTextField labelSelectedXmlFile;
     private javax.swing.JLabel labelXmlFilePath;
-    private javax.swing.JLabel labelXmlFilePath1;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,23 +6,37 @@
 
 package storehausimport;
 
+import entity.Firmas;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import static java.util.Collections.list;
-import java.util.List;
 import javax.swing.JOptionPane;
-import static storehausimport.mainFrame.logger;
+import javax.swing.JTextField;
+
 /**
  *
  * @author Kaspars
  */
-public class getCompany extends javax.swing.JFrame {
+public class CompanieForImport extends javax.swing.JFrame {
 
     /**
-     * Creates new form getCompany
+     * Creates new form CompanieForImport
      */
-    public getCompany() {
+    public entity.Firmas companieForImport=null;
+    public CompanieForImport() {
         initComponents();
+    }
+    public javax.swing.JTextField jtextSelectedCompany = null;
+
+    public void setJtextSelectedCompany(JTextField jtextSelectedCompany) {
+        this.jtextSelectedCompany = jtextSelectedCompany;
+    }
+
+      
+    public void setcompanieForImport(Firmas companieForImport) {
+        this.companieForImport = companieForImport;
+    }
+
+    public Firmas getcompanieForImport() {
+        return companieForImport;
     }
 
     
@@ -46,16 +60,18 @@ public class getCompany extends javax.swing.JFrame {
                 return false;
             };
         };
-        jButton1 = new javax.swing.JButton();
+        buttonClose = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Izvēlieties firmu, kurā importēsiet dokumentus");
         setName("frameListOfCompanie"); // NOI18N
         setResizable(false);
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("True"), this, org.jdesktop.beansbinding.BeanProperty.create("undecorated"));
-        bindingGroup.addBinding(binding);
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                formFocusLost(evt);
+            }
+        });
 
         jTableListOfCompany.setColumnSelectionAllowed(true);
         jTableListOfCompany.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -83,15 +99,19 @@ public class getCompany extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTableListOfCompany);
         jTableListOfCompany.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jButton1.setText("Aizvērt");
-        jButton1.setToolTipText("Aizvērt logu, atlikt darbību");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonClose.setText("Aizvērt");
+        buttonClose.setToolTipText("Aizvērt logu, atlikt darbību");
+        buttonClose.setPreferredSize(new java.awt.Dimension(85, 23));
+        buttonClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonCloseActionPerformed(evt);
             }
         });
 
         jButton2.setText("Apstiprināt");
+        jButton2.setMaximumSize(new java.awt.Dimension(67, 23));
+        jButton2.setMinimumSize(new java.awt.Dimension(67, 23));
+        jButton2.setPreferredSize(new java.awt.Dimension(67, 23));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -102,23 +122,23 @@ public class getCompany extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -127,11 +147,11 @@ public class getCompany extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCloseActionPerformed
         // TODO add your handling code here:
         
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buttonCloseActionPerformed
 
     private void jTableListOfCompanyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableListOfCompanyKeyPressed
         // TODO add your handling code here: 
@@ -145,17 +165,25 @@ public class getCompany extends javax.swing.JFrame {
         // TODO add your handling code here:
         int[] selected = jTableListOfCompany.getSelectedRows();
         if (selected.length>1){
-            JOptionPane.showMessageDialog(null,"izvēlieties tikai vienu firmuā importēsiet dokumentus!");
+            JOptionPane.showMessageDialog(null,"Izvēlieties tikai vienu firmu, kurā importēsiet dokumentus!");
             return;
         }
-        entity.Firmas thisCompanieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
-        this.dispose();
+        entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
+        if (this.jtextSelectedCompany!=null){
+            jtextSelectedCompany.setText(companieForImport.getFirma());
+        }
+        this.setVisible(false);
             
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTableListOfCompanyMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseMoved
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableListOfCompanyMouseMoved
+
+    private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_formFocusLost
 
     /**
      * @param args the command line arguments
@@ -174,13 +202,13 @@ public class getCompany extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(getCompany.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CompanieForImport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(getCompany.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CompanieForImport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(getCompany.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CompanieForImport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(getCompany.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CompanieForImport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -189,16 +217,16 @@ public class getCompany extends javax.swing.JFrame {
             
             public void run() {
                 
-                new getCompany().setVisible(true);
+                new CompanieForImport().setVisible(true);
                 
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonClose;
     private java.util.List<entity.Firmas> firmasList;
     private javax.persistence.Query firmasQuery;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableListOfCompany;
