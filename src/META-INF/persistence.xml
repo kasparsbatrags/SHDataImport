@@ -11,4 +11,15 @@
       <property name="javax.persistence.jdbc.password" value="1"/>
     </properties>
   </persistence-unit>
+  <persistence-unit name="SHDataImportPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <properties>
+    <class>entity.Konti</class>        
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/grals_firm068"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="1"/>
+      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+    </properties>
+  </persistence-unit>
 </persistence>

@@ -8,6 +8,8 @@ package storehausimport;
 
 import entity.Firmas;
 import java.awt.event.KeyEvent;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -20,6 +22,15 @@ public class CompanieForImport extends javax.swing.JFrame {
     /**
      * Creates new form CompanieForImport
      */
+    public EntityManager companyEntityPUEntityManager=null;
+    private Object result;
+
+    public void setCompanyEntityPUEntityManager(EntityManager companyEntityPUEntityManager) {
+        this.companyEntityPUEntityManager = companyEntityPUEntityManager;
+    }
+
+
+    
     public entity.Firmas companieForImport=null;
     public CompanieForImport() {
         initComponents();
@@ -169,9 +180,36 @@ public class CompanieForImport extends javax.swing.JFrame {
             return;
         }
         entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
-        if (this.jtextSelectedCompany!=null){
-            jtextSelectedCompany.setText(companieForImport.getFirma());
+        
+        companyEntityPUEntityManager=javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+        if (this.jtextSelectedCompany!=null && companyEntityPUEntityManager!=null){
+            companyEntityPUEntityManager.setProperty("javax.persistence.jdbc.url", 
+                    "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
+            try {
+                companyEntityPUEntityManager.getTransaction().begin();
+                try {
+                result=companyEntityPUEntityManager.createNativeQuery("SELECT 1 FROM Konti where konts='1'").getSingleResult();
+                } catch (Exception  ex)  {
+                    JOptionPane.showMessageDialog(null,"Datu bāzes pieslēguma pārbaude nav izdevusies!\n"+companieForImport.getNosaukums()+
+                    " datu bāze ("+companieForImport.getFirma()+")\n"+ex.getMessage());
+                }
+                companyEntityPUEntityManager.getTransaction().commit();
+            } catch (PersistenceException  ex)  {
+                JOptionPane.showMessageDialog(null,"Neizdevās pieslēgties pie "+companieForImport.getNosaukums()+
+                " datu bāzes ("+companieForImport.getFirma()+")\n"+ex.getMessage());
+                
+            } finally {
+                if (companyEntityPUEntityManager.getTransaction().isActive())
+                    companyEntityPUEntityManager.getTransaction().rollback();
+                companyEntityPUEntityManager.close();
+            }
+            if (result.equals(null)){
+                companyEntityPUEntityManager=null;
+            } else{
+                jtextSelectedCompany.setText(companieForImport.getNosaukums());
+            }
         }
+        
         this.setVisible(false);
             
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -230,7 +268,7 @@ public class CompanieForImport extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableListOfCompany;
-    private javax.persistence.EntityManager storeHausImportPUEntityManager;
+    public javax.persistence.EntityManager storeHausImportPUEntityManager;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

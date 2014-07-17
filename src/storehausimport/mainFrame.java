@@ -6,6 +6,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import javax.persistence.EntityManager;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.OPEN_DIALOG;
 import javax.swing.JOptionPane;
@@ -31,10 +32,11 @@ public class mainFrame extends javax.swing.JFrame {
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
     public entity.Firmas companieForImport=null;
+    public EntityManager companyEntityPUEntityManager;
 
+
+  
     
-
-        
     /**
      * Creates new form mainFrame
      */
@@ -259,6 +261,7 @@ public class mainFrame extends javax.swing.JFrame {
         selectedComanieForImport.setcompanieForImport(companieForImport);
         selectedComanieForImport.setJtextSelectedCompany(jtextSelectedCompany);
         selectedComanieForImport.setVisible(true);
+        companyEntityPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
         this.labelSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.jtextSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.buttonChoseFile.setEnabled(!selectedComanieForImport.equals(null));
