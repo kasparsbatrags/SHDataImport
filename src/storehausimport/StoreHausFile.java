@@ -6,18 +6,13 @@
 
 package storehausimport;
 
+import entity.Agenti;
 import entity.Gramata;
-import entity.Konti;
-import entity.Piezime;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,10 +32,12 @@ public class StoreHausFile  {
     private final DocumentBuilderFactory dbFactory;
     private final File fXmlFile;
     private final Document doc;
-    public EntityManager companyEntityPUEntityManager;
+    public EntityManager companyEntityManager;
+    private EntityTransaction thisTransaction=null;
+    
 
-    public void setCompanyEntityPUEntityManager(EntityManager companyEntityPUEntityManager) {
-        this.companyEntityPUEntityManager = companyEntityPUEntityManager;
+    public void setCompanyEntityPUEntityManager(EntityManager companyEntityManager) {
+        this.companyEntityManager = companyEntityManager;
     }
     
     StoreHausFile(String xmlFileWithFullPath) throws ParserConfigurationException, SAXException, IOException {
@@ -75,46 +72,22 @@ public class StoreHausFile  {
     }
     public void insertDocument() throws Exception{
         
-        if (companyEntityPUEntityManager.equals(null)){
+        if (companyEntityManager.equals(null)){
             throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityPUEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
-            
-            Map<String,Object> props = companyEntityPUEntityManager.getProperties();
-                try {
-                    companyEntityPUEntityManager.getTransaction().begin();
-                    Piezime konti = new Piezime();
-                    konti.setPiezime("qqq");
-                    companyEntityPUEntityManager.persist(konti);
-                    companyEntityPUEntityManager.getTransaction().commit();
-                } catch (Exception  ex)  {
-                    companyEntityPUEntityManager.getTransaction().rollback();
-                    JOptionPane.showMessageDialog(null,"Neizdevās pievienot ierakstu "+ex.getMessage());
-                }
-        
-////////        EntityTransaction thisEntity=companyEntityPUEntityManager.getTransaction();
-////////        thisEntity.begin();
-////////         List listResult = companyEntityPUEntityManager.createNativeQuery("select * from gramata order by ident desc limit 10")
-////////                    .getResultList();
-////////         if(listResult.size()!=0){
-////////              Iterator itr = listResult.iterator();
-////////              while(itr.hasNext()){
-////////                Gramata gramata = (Gramata)itr.next();
-////////                System.out.print("ident:"+gramata.getIdent());
-////////                System.out.print(" numurs:"+ gramata.getNum());
-////////                System.out.println();
-////////              }
-////////            }
-//        
-//        Gramata dokuments = new Gramata();
-//        dokuments.setIdent(Long.MIN_VALUE);
-//        dokuments.setAgents("agents 007");
-//        companyEntityPUEntityManager.persist(dokuments);
-//        thisEntity.commit();
-//            
-        
-            
-        
+        try {
+            Map<String,Object> props = companyEntityManager.getProperties();    
+            thisTransaction=companyEntityManager.getTransaction();
+            thisTransaction.begin();
+                Gramata dokuments = new Gramata();
+                dokuments.setAgents("sss");
+                companyEntityManager.persist(dokuments);
+            thisTransaction.commit();
+        } catch (Exception  ex)  {
+            companyEntityManager.getTransaction().rollback();
+            JOptionPane.showMessageDialog(null,"Neizdevās pievienot ierakstu "+ex.getMessage());
+        }
     }
     public void importXmlFile() throws Exception{
          

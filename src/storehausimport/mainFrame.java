@@ -279,8 +279,7 @@ public class mainFrame extends javax.swing.JFrame {
     private void buttonImportDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonImportDataActionPerformed
         try {
             // TODO add your handling code here:
-            StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);
-            Map<String,Object> props = companyForImportEntityManager.getProperties();   
+            StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);  
             shf.setCompanyEntityPUEntityManager(companyForImportEntityManager);
             shf.insertDocument();
         } catch (ParserConfigurationException ex) {

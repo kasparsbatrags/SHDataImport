@@ -6,6 +6,7 @@
     <class>entity.Firmas</class>
     <class>entity.Gramata</class>
     <class>entity.Piezime</class>
+    <class>entity.Agenti</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/grals"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
