@@ -70,14 +70,14 @@ public class StoreHausFile  {
         }
         return returnedMessage;
     }
+
     public void insertDocument() throws Exception{
         
         if (companyEntityManager.equals(null)){
-            throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityPUEntityManager'. \n "
+            throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
         try {
-            Map<String,Object> props = companyEntityManager.getProperties();    
             thisTransaction=companyEntityManager.getTransaction();
             thisTransaction.begin();
                 Gramata dokuments = new Gramata();
