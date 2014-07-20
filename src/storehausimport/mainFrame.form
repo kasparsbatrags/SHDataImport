@@ -32,7 +32,7 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="buttonChoseFile" pref="110" max="32767" attributes="0"/>
                   <Component id="buttonImportData" pref="110" max="32767" attributes="0"/>
-                  <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="buttonChooseCompany" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -62,7 +62,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="labelSelectedCompany" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jtextSelectedCompany" alignment="3" max="32767" attributes="0"/>
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonChooseCompany" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -137,6 +137,9 @@
         <Property name="toolTipText" type="java.lang.String" value="Import&#x113;t failu gr&#x101;matved&#x12b;bas sist&#x113;m&#x101;"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonImportDataActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -180,13 +183,13 @@
         <Property name="name" type="java.lang.String" value="xmlfilePathLabel" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="buttonChooseCompany">
       <Properties>
         <Property name="text" type="java.lang.String" value="Izv&#x113;l&#x113;ties firmu"/>
         <Property name="toolTipText" type="java.lang.String" value="Izv&#x113;l&#x113;tiesfirmu, kur&#x101; import&#x113;siet dokumentus"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChooseCompanyActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

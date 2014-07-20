@@ -2,6 +2,7 @@ package storehausimport;
 
 import entity.Firmas;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,13 +27,13 @@ import org.xml.sax.SAXException;
  */
 public class mainFrame extends javax.swing.JFrame {
     
-    static Logger logger = Logger.getLogger("SHImportLoger");
+    static final Logger logger = Logger.getLogger("SHImportLoger");
     static FileHandler fh;  
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
     public entity.Firmas companieForImport=null;
-    public EntityManager companyEntityPUEntityManager;
+    public EntityManager companyForImportEntityManager=null;
 
 
   
@@ -64,7 +65,7 @@ public class mainFrame extends javax.swing.JFrame {
         PanelFileRecordsInfo = new javax.swing.JTextPane();
         buttonCloseApp = new javax.swing.JToggleButton();
         labelSelectedCompany = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        buttonChooseCompany = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(779, 472));
@@ -106,6 +107,11 @@ public class mainFrame extends javax.swing.JFrame {
         buttonImportData.setText("Importēt");
         buttonImportData.setToolTipText("Importēt failu grāmatvedības sistēmā");
         buttonImportData.setEnabled(false);
+        buttonImportData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonImportDataActionPerformed(evt);
+            }
+        });
 
         PanelFileRecordsInfo.setEditable(false);
         PanelFileRecordsInfo.setEnabled(false);
@@ -128,11 +134,11 @@ public class mainFrame extends javax.swing.JFrame {
         labelSelectedCompany.setEnabled(false);
         labelSelectedCompany.setName("xmlfilePathLabel"); // NOI18N
 
-        jButton1.setText("Izvēlēties firmu");
-        jButton1.setToolTipText("Izvēlētiesfirmu, kurā importēsiet dokumentus");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonChooseCompany.setText("Izvēlēties firmu");
+        buttonChooseCompany.setToolTipText("Izvēlētiesfirmu, kurā importēsiet dokumentus");
+        buttonChooseCompany.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonChooseCompanyActionPerformed(evt);
             }
         });
 
@@ -145,7 +151,7 @@ public class mainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(buttonChoseFile, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                     .addComponent(buttonImportData, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonChooseCompany, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelFileRecordsInfo)
@@ -169,7 +175,7 @@ public class mainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelSelectedCompany)
                     .addComponent(jtextSelectedCompany)
-                    .addComponent(jButton1))
+                    .addComponent(buttonChooseCompany))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelXmlFilePath)
@@ -212,7 +218,7 @@ public class mainFrame extends javax.swing.JFrame {
                 this.PanelFileRecordsInfo.setText(fileRecordsInfo);
                 this.buttonImportData.setEnabled(!fileRecordsInfo.isEmpty());
                 this.labelFileRecordsInfo.setEnabled(!fileRecordsInfo.isEmpty());
-                fileRecordsInfo=sht.getFileInfo();
+                fileRecordsInfo=sht.getXmlFileInfo();
                 this.PanelFileRecordsInfo.setText(fileRecordsInfo);
                 this.PanelFileRecordsInfo.setEnabled(!fileRecordsInfo.isEmpty());
                 this.buttonImportData.setEnabled(!fileRecordsInfo.isEmpty());
@@ -255,19 +261,45 @@ public class mainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtextSelectedCompanyActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonChooseCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChooseCompanyActionPerformed
         // TODO add your handling code here:
         CompanieForImport selectedComanieForImport = new CompanieForImport();
         selectedComanieForImport.setcompanieForImport(companieForImport);
         selectedComanieForImport.setJtextSelectedCompany(jtextSelectedCompany);
         selectedComanieForImport.setVisible(true);
-        companyEntityPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+        companyForImportEntityManager = javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+        selectedComanieForImport.setSelectedCompanyForImportEntityManager(companyForImportEntityManager);
         this.labelSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.jtextSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.buttonChoseFile.setEnabled(!selectedComanieForImport.equals(null));
         
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buttonChooseCompanyActionPerformed
+
+    private void buttonImportDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonImportDataActionPerformed
+        try {
+            // TODO add your handling code here:
+            StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);
+            Map<String,Object> props = companyForImportEntityManager.getProperties();   
+            shf.setCompanyEntityPUEntityManager(companyForImportEntityManager);
+            shf.insertDocument();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,ex.getMessage());
+        } catch (SAXException ex) {
+            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,ex.getMessage());
+        } catch (Exception ex) {
+            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"Kļūda StoreHausFile! "+ex.getMessage());
+        }
+        
+          
+        
+    }//GEN-LAST:event_buttonImportDataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,10 +352,10 @@ public class mainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane PanelFileRecordsInfo;
+    private javax.swing.JButton buttonChooseCompany;
     private javax.swing.JButton buttonChoseFile;
     private javax.swing.JToggleButton buttonCloseApp;
     private javax.swing.JButton buttonImportData;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JTextField jtextSelectedCompany;
     private javax.swing.JLabel labelFileRecordsInfo;
