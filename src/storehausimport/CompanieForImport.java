@@ -75,7 +75,7 @@ public class CompanieForImport extends javax.swing.JFrame {
             };
         };
         buttonClose = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        buttonAcept = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Izvēlieties firmu, kurā importēsiet dokumentus");
@@ -105,6 +105,11 @@ public class CompanieForImport extends javax.swing.JFrame {
                 jTableListOfCompanyMouseMoved(evt);
             }
         });
+        jTableListOfCompany.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableListOfCompanyMouseClicked(evt);
+            }
+        });
         jTableListOfCompany.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTableListOfCompanyKeyPressed(evt);
@@ -122,13 +127,13 @@ public class CompanieForImport extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Apstiprināt");
-        jButton2.setMaximumSize(new java.awt.Dimension(67, 23));
-        jButton2.setMinimumSize(new java.awt.Dimension(67, 23));
-        jButton2.setPreferredSize(new java.awt.Dimension(67, 23));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonAcept.setText("Apstiprināt");
+        buttonAcept.setMaximumSize(new java.awt.Dimension(67, 23));
+        buttonAcept.setMinimumSize(new java.awt.Dimension(67, 23));
+        buttonAcept.setPreferredSize(new java.awt.Dimension(67, 23));
+        buttonAcept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                buttonAceptActionPerformed(evt);
             }
         });
 
@@ -139,7 +144,7 @@ public class CompanieForImport extends javax.swing.JFrame {
             .addComponent(jScrollPane1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonAcept, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -150,7 +155,7 @@ public class CompanieForImport extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonAcept, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonClose, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -175,49 +180,10 @@ public class CompanieForImport extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jTableListOfCompanyKeyPressed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
         // TODO add your handling code here:
-        int[] selected = jTableListOfCompany.getSelectedRows();
-        if (selected.length>1){
-            JOptionPane.showMessageDialog(null,"Izvēlieties tikai vienu firmu, kurā importēsiet dokumentus!");
-            return;
-        }
-        entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
-        
-        //selectedCompanyForImportEntityManager=javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-        if (this.jtextSelectedCompany!=null && selectedCompanyForImportEntityManager!=null){
-            selectedCompanyForImportEntityManager.setProperty("javax.persistence.jdbc.url", 
-                    "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
-            try {
-                selectedCompanyForImportEntityManager.getTransaction().begin();
-                try {
-                               
-                result=selectedCompanyForImportEntityManager.createNativeQuery("SELECT * FROM Konti where konts='1'").getSingleResult();
-                                } catch (Exception  ex)  {
-                    JOptionPane.showMessageDialog(null,"Datu bāzes pieslēguma pārbaude nav izdevusies!\n"+companieForImport.getNosaukums()+
-                    " datu bāze ("+companieForImport.getFirma()+")\n"+ex.getMessage());
-                }
-                selectedCompanyForImportEntityManager.getTransaction().commit();
-            } catch (PersistenceException  ex)  {
-                JOptionPane.showMessageDialog(null,"Neizdevās pieslēgties pie "+companieForImport.getNosaukums()+
-                " datu bāzes ("+companieForImport.getFirma()+")\n"+ex.getMessage());
-                 if (selectedCompanyForImportEntityManager.getTransaction().isActive())
-                    selectedCompanyForImportEntityManager.getTransaction().rollback();   
-                  selectedCompanyForImportEntityManager.close();
-                                           
-            }
-            if (result.equals(null)){
-                selectedCompanyForImportEntityManager=null;
-            } else{
-                jtextSelectedCompany.setText(companieForImport.getNosaukums());
-                Map<String,Object> props = selectedCompanyForImportEntityManager.getProperties();                   
-            }
- 
-        }
-        
-        this.setVisible(false);
-            
-    }//GEN-LAST:event_jButton2ActionPerformed
+        this.aceptCompanyChoose();        
+    }//GEN-LAST:event_buttonAceptActionPerformed
 
     private void jTableListOfCompanyMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseMoved
         // TODO add your handling code here:
@@ -227,6 +193,11 @@ public class CompanieForImport extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_formFocusLost
+
+    private void jTableListOfCompanyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseClicked
+        // TODO add your handling code here:
+        this.aceptCompanyChoose();
+    }//GEN-LAST:event_jTableListOfCompanyMouseClicked
 
     /**
      * @param args the command line arguments
@@ -265,12 +236,56 @@ public class CompanieForImport extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    private void aceptCompanyChoose(){
+     int[] selected = jTableListOfCompany.getSelectedRows();
+        if (selected.length>1){
+            JOptionPane.showMessageDialog(null,"Izvēlieties tikai vienu firmu, kurā importēsiet dokumentus!");
+            return;
+        }
+        entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
+        
+        //selectedCompanyForImportEntityManager=javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+        if (this.jtextSelectedCompany!=null && selectedCompanyForImportEntityManager!=null){
+            selectedCompanyForImportEntityManager.setProperty("javax.persistence.jdbc.url", 
+                    "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
+            try {
+                selectedCompanyForImportEntityManager.getTransaction().begin();
+                try {
+                               
+                result=selectedCompanyForImportEntityManager.createNativeQuery("SELECT * FROM Konti where konts='1'").getSingleResult();
+                                } catch (Exception  ex)  {
+                    JOptionPane.showMessageDialog(null,"Datu bāzes pieslēguma pārbaude nav izdevusies!\n"+companieForImport.getNosaukums()+
+                    " datu bāze ("+companieForImport.getFirma()+")\n"+ex.getMessage());
+                }
+                selectedCompanyForImportEntityManager.getTransaction().commit();
+            } catch (PersistenceException  ex)  {
+                JOptionPane.showMessageDialog(null,"Neizdevās pieslēgties pie "+companieForImport.getNosaukums()+
+                " datu bāzes ("+companieForImport.getFirma()+")\n"+ex.getMessage());
+                 if (selectedCompanyForImportEntityManager.getTransaction().isActive())
+                    selectedCompanyForImportEntityManager.getTransaction().rollback();   
+                  selectedCompanyForImportEntityManager.close();
+                                           
+            }
+            if (result.equals(null)){
+                selectedCompanyForImportEntityManager=null;
+            } else{
+                jtextSelectedCompany.setText(companieForImport.getNosaukums());
+                Map<String,Object> props = selectedCompanyForImportEntityManager.getProperties();                   
+            }
+ 
+        }
+        
+        this.setVisible(false);
+    }            
+    
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAcept;
     private javax.swing.JButton buttonClose;
     private java.util.List<entity.Firmas> firmasList;
     private javax.persistence.Query firmasQuery;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableListOfCompany;
     public javax.persistence.EntityManager storeHausImportPUEntityManager;

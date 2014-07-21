@@ -63,7 +63,7 @@
           <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButton2" min="-2" pref="110" max="-2" attributes="0"/>
+              <Component id="buttonAcept" min="-2" pref="110" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="buttonClose" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -76,7 +76,7 @@
               <Component id="jScrollPane1" min="-2" pref="380" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButton2" alignment="1" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="buttonAcept" alignment="1" min="-2" pref="23" max="-2" attributes="0"/>
                   <Component id="buttonClose" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -131,6 +131,7 @@
           </BindingProperties>
           <Events>
             <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="jTableListOfCompanyMouseMoved"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableListOfCompanyMouseClicked"/>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTableListOfCompanyKeyPressed"/>
           </Events>
           <AuxValues>
@@ -152,7 +153,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCloseActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="buttonAcept">
       <Properties>
         <Property name="text" type="java.lang.String" value="Apstiprin&#x101;t"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -166,7 +167,7 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAceptActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
