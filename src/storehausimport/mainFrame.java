@@ -1,8 +1,6 @@
 package storehausimport;
 
-import entity.Firmas;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -281,7 +279,7 @@ public class mainFrame extends javax.swing.JFrame {
             // TODO add your handling code here:
             StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);  
             shf.setCompanyEntityPUEntityManager(companyForImportEntityManager);
-            shf.insertDocument();
+            shf.importAllXmlData();
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,ex.getMessage());

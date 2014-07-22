@@ -7,8 +7,10 @@
 package storehausimport;
 
 import entity.Gramata;
+import entity.Sadale;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import static org.eclipse.persistence.platform.database.oracle.plsql.OraclePLSQLTypes.Int;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,6 +37,8 @@ public class StoreHausFile  {
     private final DocumentBuilderFactory dbFactory;
     private final File fXmlFile;
     private final Document doc;
+    private Gramata thisDoc=null;
+    Long docIdents=null;
     public EntityManager companyEntityManager;
     private EntityTransaction thisTransaction=null;
     
@@ -89,20 +92,24 @@ public class StoreHausFile  {
             throw new Exception("Funkcijā checkIsDocumentInserted trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
-        if (thisTransaction.equals(null)){
+        if (thisTransaction == null){
              thisTransaction=companyEntityManager.getTransaction();
         }
         thisTransaction.begin();
-        
-        List existDocumentList = companyEntityManager
-                .createQuery("Select g from gramata g where g.num=:num and g.datums=:datums")
-                .setParameter("num",documentNumber)
-                .setParameter("datums",documentDate)
-                .getResultList();
-        
+        List existDocumentList=null;
+        try {
+            existDocumentList = companyEntityManager
+                    .createQuery("Select g from gramata g where g.num=:nums and g.datums=:datum")
+                    .setParameter("nums",documentNumber)
+                    .setParameter("datum",documentDate)
+                    .getResultList();
+         }catch(Exception e){ 	          
+                 throw new Exception(e); 
+         } 
+        thisTransaction.commit();
             if(existDocumentList.size()!=0){
                 if (existDocumentList.size()==1){
-                    Gramata thisDoc= (Gramata) existDocumentList.get(0);
+                    thisDoc= (Gramata) existDocumentList.get(0);
                     return thisDoc.getIdent();
                     
                 }
@@ -119,37 +126,72 @@ public class StoreHausFile  {
     
     public void insertDocument( String docCurrency,
                                 Date docDate,
-                                String docNumber) throws Exception{
+                                String docNumber,
+                                String docDebetAccont,
+                                String docCreditAccont,
+                                BigDecimal docSum) throws Exception{
 
         if (companyEntityManager.equals(null)){
             throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
-//        Map<String,Object> props = companyEntityManager.getProperties(); 
         try {
+            docIdents=checkDocumentExist(docDate, docNumber); 
             thisTransaction=companyEntityManager.getTransaction();
-            thisTransaction.begin();
-                Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
-                Long idents=(Long) q.getSingleResult();
-                Gramata dokuments = new Gramata();
-                dokuments.setIdent(idents);
-                dokuments.setAgents("sss");
-//                Agenti dokuments = new Agenti();            
-//                dokuments.setAgents("sss");
-                companyEntityManager.persist(dokuments);
-            thisTransaction.commit();
+            if (docIdents == null){
+                thisTransaction.begin();
+                                 
+                    Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
+                    docIdents=(Long) q.getSingleResult();
+                    Gramata document = new Gramata();
+                    document.setIdent(docIdents);
+                    document.setDatums(docDate);
+                    document.setNum(docNumber);
+                    document.setValuta(docCurrency);
+                    document.setSumma(docSum);
+                    companyEntityManager.persist(document);
+                    
+                    Sadale sadale = new Sadale();
+                    sadale.setIdent(docIdents);
+                    sadale.setKontets(Boolean.FALSE);
+                    sadale.setUzK(docDebetAccont);
+                    sadale.setNoK(docCreditAccont);
+                    sadale.setSumma(docSum);
+                    sadale.setDatums(docDate);
+                    
+                    
+                thisTransaction.commit();
+            } else {
+                Sadale sadale = new Sadale();
+                sadale.setIdent(docIdents);
+                sadale.setKontets(Boolean.FALSE);
+                sadale.setUzK(docDebetAccont);
+                sadale.setNoK(docCreditAccont);
+                sadale.setSumma(docSum);
+                sadale.setDatums(docDate);
+                companyEntityManager.persist(sadale);
+                BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
+                thisDoc.setSumma(docNewSum);
+
+                thisTransaction.commit();
+            }
+           
         } catch (Exception  ex)  {
             companyEntityManager.getTransaction().rollback();
             JOptionPane.showMessageDialog(null,"Neizdevās pievienot ierakstu "+ex.getMessage());
         }
     }
     
-    public void importAllXmlFile() throws Exception{
+    public void importAllXmlData() throws Exception{
          
         NodeList nDocumentsList = doc.getElementsByTagName("DmCtrlDoc"); //list of documents in file
-        String  docCurrency="";
-        Date    docDate=null;
-        String  docNumber="";
+        String      docCurrency="";
+        Date        docDate=null;
+        String      docNumber="";
+        String      docDebetAccont="";
+        String      docCreditAccont="";
+        BigDecimal  docSum=null;
+        
         if (nDocumentsList.getLength()==0) { 
             throw new Exception("Failā nav neviena dokumenta!");
         }
@@ -164,36 +206,31 @@ public class StoreHausFile  {
             }
             for (int tempDocRows = 0; tempDocRows < nReportDocsList.getLength(); tempDocRows++) {
                 Node nDocumentRowNode = nReportDocsList.item(tempDocRows);
+                System.out.println("\nCurrent Element :" + nDocumentRowNode.getNodeName());
                 if (nDocumentRowNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nDocumentRowNode;
-                    docDate=new SimpleDateFormat("YYYY, mm, dd", Locale.ENGLISH).parse(eElement.getAttribute("t113.3.7"));
-                    docCurrency=eElement.getAttribute("t100.3.1");
-                    docNumber=eElement.getAttribute("t113.4.7");
+                    String docDateText=eElement.getElementsByTagName("t113.3.7").item(0).getTextContent();
+                    if (!docDateText.isEmpty()){
+                        docDate=new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH).parse(docDateText);
+                    } else {
+                        docDate=null; 
+                    }
+                    docCurrency=eElement.getElementsByTagName("t100.3.10").item(0).getTextContent();
+                    docNumber=eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
+                    docDebetAccont=eElement.getElementsByTagName("t106.3.1").item(0).getTextContent();
+                    docCreditAccont=eElement.getElementsByTagName("t106.3.2").item(0).getTextContent();
+                    String docSumText=eElement.getElementsByTagName("t0.1.4").item(0).getTextContent();
+                    if(!docSumText.isEmpty()){
+                        docSum= new BigDecimal(docSumText.replaceAll(",", ""));
+                    }
                     
                     try {
-                        this.insertDocument(docCurrency, docDate, docNumber);
+                        this.insertDocument(docCurrency, docDate, docNumber,docDebetAccont,docCreditAccont,docSum);
                      } catch (Exception  ex)  {
-                         new Exception(ex.getMessage());
+                         throw new Exception(ex);
                      }
                 }
-                
-//                NodeList nDocumentRows = doc.getElementsByTagName("Params_Row"); //list of parameter section in file
-//                    for (int tempRow = 0; tempRow < nReportParametersRow.getLength(); tempRow++) {
-//                        Node nParamsRowNode = nReportParametersRow.item(tempRow);
-//                        if (nParamsRowNode.getNodeType() == Node.ELEMENT_NODE) {
-//                            Element eElement = (Element) nParamsRowNode;
-//                            currency=eElement.getElementsByTagName("t100.3.1");
-//                        }
-//                    }
             }
-
-         
-         
+         }
      }
-     }
-
-    void insertDocument() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }
