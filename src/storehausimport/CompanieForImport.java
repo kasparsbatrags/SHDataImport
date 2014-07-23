@@ -253,7 +253,7 @@ public class CompanieForImport extends javax.swing.JFrame {
                 selectedCompanyForImportEntityManager.getTransaction().begin();
                 try {
                                
-                result=selectedCompanyForImportEntityManager.createNativeQuery("SELECT * FROM Konti where konts='1'").getSingleResult();
+                result=selectedCompanyForImportEntityManager.createNativeQuery("SELECT count(1) FROM Gramata").getSingleResult();
                                 } catch (Exception  ex)  {
                     JOptionPane.showMessageDialog(null,"Datu bāzes pieslēguma pārbaude nav izdevusies!\n"+companieForImport.getNosaukums()+
                     " datu bāze ("+companieForImport.getFirma()+")\n"+ex.getMessage());

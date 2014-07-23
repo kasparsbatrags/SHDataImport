@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -95,29 +96,35 @@ public class StoreHausFile  {
         if (thisTransaction == null){
              thisTransaction=companyEntityManager.getTransaction();
         }
-        thisTransaction.begin();
-        List existDocumentList=null;
+       
+        List<Gramata> existDocumentList=null;
         try {
+            thisTransaction.begin();
+            Map<String,Object> props = companyEntityManager.getProperties();
             existDocumentList = companyEntityManager
-                    .createQuery("Select g from gramata g where g.num=:nums and g.datums=:datum")
-                    .setParameter("nums",documentNumber)
-                    .setParameter("datum",documentDate)
+                    .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_")
+                    .setParameter("num_",documentNumber)
+                    .setParameter("datums_",documentDate)
                     .getResultList();
-         }catch(Exception e){ 	          
+            
+        }catch(Exception e){ 	          
+            if(thisTransaction.isActive())
+                thisTransaction.rollback();
+
                  throw new Exception(e); 
          } 
         thisTransaction.commit();
-            if(existDocumentList.size()!=0){
-                if (existDocumentList.size()==1){
-                    thisDoc= (Gramata) existDocumentList.get(0);
-                    return thisDoc.getIdent();
-                    
-                }
-                if (existDocumentList.size()>1){
-                    throw new Exception("Dokuments ar numuru: "+ documentNumber+ " un datumu: "+documentDate.toString()
-                            +" sistēmā ir vairākos eksemplāros - netiks eksportēts!");
-                }
+        if(existDocumentList.size()!=0){
+            if (existDocumentList.size()==1){
+                thisDoc= (Gramata) existDocumentList.get(0);
+                return thisDoc.getIdent();
+
             }
+            if (existDocumentList.size()>1){
+                throw new Exception("Dokuments ar numuru: "+ documentNumber+ " un datumu: "+documentDate.toString()
+                        +" sistēmā ir vairākos eksemplāros - netiks eksportēts!");
+            }
+        }
         return null;
     }
     
@@ -177,8 +184,9 @@ public class StoreHausFile  {
             }
            
         } catch (Exception  ex)  {
-            companyEntityManager.getTransaction().rollback();
-            JOptionPane.showMessageDialog(null,"Neizdevās pievienot ierakstu "+ex.getMessage());
+            if(companyEntityManager.getTransaction().isActive())
+                companyEntityManager.getTransaction().rollback();
+            JOptionPane.showMessageDialog(null,"Neizdevās pievienot ierakstu.\nKļūda: "+ex.getMessage());
         }
     }
     
@@ -211,7 +219,7 @@ public class StoreHausFile  {
                     Element eElement = (Element) nDocumentRowNode;
                     String docDateText=eElement.getElementsByTagName("t113.3.7").item(0).getTextContent();
                     if (!docDateText.isEmpty()){
-                        docDate=new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH).parse(docDateText);
+                        docDate=new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault()).parse(docDateText);
                     } else {
                         docDate=null; 
                     }

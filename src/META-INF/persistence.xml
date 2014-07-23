@@ -4,9 +4,6 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entity.Useri</class>
     <class>entity.Firmas</class>
-    <class>entity.Piezime</class>
-    <class>entity.Agenti</class>
-    <class>entity.Gramata__</class>
     <class>entity.Gramata</class>
     <class>entity.Sadale</class>
     <properties>
