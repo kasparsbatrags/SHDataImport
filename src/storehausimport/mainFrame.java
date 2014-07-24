@@ -230,18 +230,18 @@ public class mainFrame extends javax.swing.JFrame {
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,ex.getMessage());
-                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
+//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (SAXException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,"Kļūda faila "+xmlFileWithFullPath+" struktūrā!"+"\n"+ex.getMessage());
-                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
+//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (IOException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,"Kļūda faila "+xmlFileWithFullPath+" nolasīšanā! "+"\n"+ex.getMessage());
-                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
+//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (Exception ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
-                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
+//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
                 JOptionPane.showMessageDialog(null,"Kļūda! Fails "+xmlFileWithFullPath+" neatbilst noteiktai StoreHaus struktūrai! "+"\n"+ex.getMessage());
             }
            
@@ -333,20 +333,20 @@ public class mainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                
-                try {                   
-                    fh = new FileHandler("SHImporter.log");  
-                     logger.addHandler(fh);
-                    SimpleFormatter formatter = new SimpleFormatter();  
-                    
-                    fh.setFormatter(formatter);  
-                    //logger.info("My first log");  
-                    
+//                try {                   
+////                    fh = new FileHandler("SHImporter.log");  
+////                    logger.addHandler(fh);
+////                    SimpleFormatter formatter = new SimpleFormatter();  
+//                    
+////                    fh.setFormatter(formatter);  
+//                    //logger.info("My first log");  
+//                    
                     new mainFrame().setVisible(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                } catch (IOException ex) {
+//                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                } catch (SecurityException ex) {
+//                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             }
         });
     }
