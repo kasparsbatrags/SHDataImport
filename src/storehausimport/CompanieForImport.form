@@ -2,7 +2,7 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="javax.persistence.EntityManager" name="storeHausImportPUEntityManager">
+    <Component class="javax.persistence.EntityManager" name="gralsEntityManager">
       <Properties>
         <Property name="persistenceUnit" type="java.lang.String" value="storeHausImportPU"/>
       </Properties>
@@ -14,11 +14,11 @@
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT f FROM Firmas f"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
-          <ComponentRef name="storeHausImportPUEntityManager"/>
+          <ComponentRef name="gralsEntityManager"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : storeHausImportPUEntityManager.createQuery(&quot;SELECT f FROM Firmas f order by f.nosaukums&quot;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : gralsEntityManager.createQuery(&quot;SELECT f FROM Firmas f order by f.nosaukums&quot;)"/>
       </AuxValues>
     </Component>
     <Component class="java.util.List" name="firmasList">

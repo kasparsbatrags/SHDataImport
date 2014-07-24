@@ -13,4 +13,10 @@
       <property name="javax.persistence.jdbc.password" value="1"/>
     </properties>
   </persistence-unit>
+  <persistence-unit name="selectedCompanyPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>entity.Gramata</class>
+    <class>entity.Sadale</class>
+  </persistence-unit>
+  
 </persistence>

@@ -31,7 +31,11 @@ public class mainFrame extends javax.swing.JFrame {
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
     public entity.Firmas companieForImport=null;
-    public EntityManager companyForImportEntityManager=null;
+    public EntityManager companyEntityManager=null;
+
+    public void setCompanyEntityManager(EntityManager companyEntityManager) {
+        this.companyEntityManager = companyEntityManager;
+    }
 
 
   
@@ -265,8 +269,8 @@ public class mainFrame extends javax.swing.JFrame {
         selectedComanieForImport.setcompanieForImport(companieForImport);
         selectedComanieForImport.setJtextSelectedCompany(jtextSelectedCompany);
         selectedComanieForImport.setVisible(true);
-        companyForImportEntityManager = javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-        selectedComanieForImport.setSelectedCompanyForImportEntityManager(companyForImportEntityManager);
+        companyEntityManager = javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+        selectedComanieForImport.setSelectedCompanyEntityManager(companyEntityManager);
         this.labelSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.jtextSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.buttonChoseFile.setEnabled(!selectedComanieForImport.equals(null));
@@ -278,7 +282,7 @@ public class mainFrame extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);  
-            shf.setCompanyEntityPUEntityManager(companyForImportEntityManager);
+            shf.setCompanyEntityPUEntityManager(companyEntityManager);
             shf.importAllXmlData();
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
