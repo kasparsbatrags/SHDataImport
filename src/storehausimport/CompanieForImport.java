@@ -26,7 +26,6 @@ public class CompanieForImport extends javax.swing.JFrame {
      * Creates new form CompanieForImport
      */
     public EntityManager selectedCompanyEntityManager=null;
-    public EntityManager selectedCompanyEntityManager_1=null;
     private Object result;
     public entity.Firmas companieForImport=null;
 
@@ -34,9 +33,6 @@ public class CompanieForImport extends javax.swing.JFrame {
         initComponents();
     }
 
-    public void setSelectedCompanyEntityManager(EntityManager selectedCompanyEntityManager) {
-        this.selectedCompanyEntityManager = selectedCompanyEntityManager;
-    }
     public javax.swing.JTextField jtextSelectedCompany = null;
 
     public void setJtextSelectedCompany(JTextField jtextSelectedCompany) {
@@ -244,46 +240,33 @@ public class CompanieForImport extends javax.swing.JFrame {
         }
         entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
         
-        
-//      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/grals"/>
-//      <property name="javax.persistence.jdbc.user" value="postgres"/>
-//      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-//      <property name="javax.persistence.jdbc.password" value="1"/>
-        
         Map properties = new HashMap();
         properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
         properties.put("javax.persistence.jdbc.user", "postgres");
         properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
         properties.put("javax.persistence.jdbc.password", "1");
-        selectedCompanyEntityManager_1=javax.persistence.Persistence.createEntityManagerFactory("selectedCompanyPU", properties).createEntityManager();
-    
-        //selectedCompanyEntityManager=javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-        if (this.jtextSelectedCompany!=null && selectedCompanyEntityManager!=null){
-//            selectedCompanyEntityManager.setProperty("javax.persistence.jdbc.url", 
-//                    "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
-            this.setSelectedCompanyEntityManager(selectedCompanyEntityManager_1);
+        selectedCompanyEntityManager=javax.persistence.Persistence.createEntityManagerFactory("selectedCompanyPU", properties).createEntityManager();
 
+        if (this.jtextSelectedCompany!=null && selectedCompanyEntityManager!=null){
             try {
-                //selectedCompanyEntityManager.getTransaction().begin();
                 try {
-                               
-                    result=selectedCompanyEntityManager_1.createNativeQuery("SELECT count(1) FROM Gramata").getSingleResult();
+                    result=selectedCompanyEntityManager.createNativeQuery("SELECT count(1) FROM Gramata").getSingleResult();
                 } catch (Exception  ex)  {
                     JOptionPane.showMessageDialog(null,"Datu bāzes pieslēguma pārbaude nav izdevusies!\n"+companieForImport.getNosaukums()+
                     " datu bāze ("+companieForImport.getFirma()+")\n"+ex.getMessage());
                 }
-                //selectedCompanyEntityManager.getTransaction().commit();
+                storehausimport.mainFrame.setCompanyEntityManager(selectedCompanyEntityManager);
                 
             } catch (PersistenceException  ex)  {
                 JOptionPane.showMessageDialog(null,"Neizdevās pieslēgties pie "+companieForImport.getNosaukums()+
                 " datu bāzes ("+companieForImport.getFirma()+")\n"+ex.getMessage());
-                 if (selectedCompanyEntityManager_1.getTransaction().isActive())
-                    selectedCompanyEntityManager_1.getTransaction().rollback();   
-                  selectedCompanyEntityManager_1.close();
+                 if (selectedCompanyEntityManager.getTransaction().isActive())
+                    selectedCompanyEntityManager.getTransaction().rollback();   
+                  selectedCompanyEntityManager.close();
                                            
             }
             if (result.equals(null)){
-                selectedCompanyEntityManager_1=null;
+                selectedCompanyEntityManager=null;
             } else{
                 jtextSelectedCompany.setText(companieForImport.getNosaukums());
 //                Map<String,Object> props = selectedCompanyEntityManager.getProperties();                   

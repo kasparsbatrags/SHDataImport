@@ -31,11 +31,16 @@ public class mainFrame extends javax.swing.JFrame {
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
     public entity.Firmas companieForImport=null;
-    public EntityManager companyEntityManager=null;
+    public static EntityManager companyEntityManager=null;
 
-    public void setCompanyEntityManager(EntityManager companyEntityManager) {
-        this.companyEntityManager = companyEntityManager;
+    public EntityManager getCompanyEntityManager() {
+        return companyEntityManager;
     }
+
+    public static void setCompanyEntityManager(EntityManager companyEntityManager) {
+        mainFrame.companyEntityManager = companyEntityManager;
+    }
+
 
 
   
@@ -257,6 +262,7 @@ public class mainFrame extends javax.swing.JFrame {
     private void buttonCloseAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCloseAppActionPerformed
         // TODO add your handling code here:
         this.dispose();
+        System.exit(0);
     }//GEN-LAST:event_buttonCloseAppActionPerformed
 
     private void jtextSelectedCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtextSelectedCompanyActionPerformed
@@ -269,8 +275,8 @@ public class mainFrame extends javax.swing.JFrame {
         selectedComanieForImport.setcompanieForImport(companieForImport);
         selectedComanieForImport.setJtextSelectedCompany(jtextSelectedCompany);
         selectedComanieForImport.setVisible(true);
-        companyEntityManager = javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-        selectedComanieForImport.setSelectedCompanyEntityManager(companyEntityManager);
+//        companyEntityManager = javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+//        selectedComanieForImport.setSelectedCompanyEntityManager(companyEntityManager);
         this.labelSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.jtextSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.buttonChoseFile.setEnabled(!selectedComanieForImport.equals(null));

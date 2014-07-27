@@ -147,7 +147,6 @@ public class StoreHausFile  {
             thisTransaction=companyEntityManager.getTransaction();
             if (docIdents == null){
                 thisTransaction.begin();
-                                 
                     Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
                     docIdents=(Long) q.getSingleResult();
                     Gramata document = new Gramata();
@@ -165,21 +164,20 @@ public class StoreHausFile  {
                     sadale.setNoK(docCreditAccont);
                     sadale.setSumma(docSum);
                     sadale.setDatums(docDate);
-                    
-                    
+                    companyEntityManager.persist(sadale);                    
                 thisTransaction.commit();
             } else {
-                Sadale sadale = new Sadale();
-                sadale.setIdent(docIdents);
-                sadale.setKontets(Boolean.FALSE);
-                sadale.setUzK(docDebetAccont);
-                sadale.setNoK(docCreditAccont);
-                sadale.setSumma(docSum);
-                sadale.setDatums(docDate);
-                companyEntityManager.persist(sadale);
-                BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
-                thisDoc.setSumma(docNewSum);
-
+                thisTransaction.begin();
+                    Sadale sadale = new Sadale();
+                    sadale.setIdent(docIdents);
+                    sadale.setKontets(Boolean.FALSE);
+                    sadale.setUzK(docDebetAccont);
+                    sadale.setNoK(docCreditAccont);
+                    sadale.setSumma(docSum);
+                    sadale.setDatums(docDate);
+                    companyEntityManager.persist(sadale);
+                    BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
+                    thisDoc.setSumma(docNewSum);
                 thisTransaction.commit();
             }
            
