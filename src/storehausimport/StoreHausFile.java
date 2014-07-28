@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import static jdk.nashorn.internal.objects.NativeString.substring;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,6 +48,9 @@ public class StoreHausFile  {
     private Klienti selectedCompanyData=null;
     private boolean existRecordInSadale;
     private Klienti thisClientInfo; 
+    private Long docMindent;
+    private Long docSident;
+    private String docNumberAfix="_SH";
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -115,7 +119,7 @@ public class StoreHausFile  {
             Map<String,Object> props = companyEntityManager.getProperties();
             existDocumentList = companyEntityManager
                     .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_")
-                    .setParameter("num_",documentNumber)
+                    .setParameter("num_",documentNumber+docNumberAfix)
                     .setParameter("datums_",documentDate)
                     .getResultList();
             
@@ -142,19 +146,24 @@ public class StoreHausFile  {
     
     private Klienti getClientInfo(String clientName) throws Exception{
         
-        Klienti clientInfo=null;
-        
+        entity.Klienti clientInfo=null;
+
         if (clientName.isEmpty()) 
             throw new Exception("Neizdevās iegūt informāciju par klientu - trūkst parametrs 'clientName'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
-        
-        try {
-            clientInfo=(Klienti) companyEntityManager.createNamedQuery("Klienti.findByKlients")
-                .setParameter("klients",clientName)
-                .getSingleResult();
-        } catch (PersistenceException  ex)  {
-                JOptionPane.showMessageDialog(null,"Kļūda izpildot pieprasījumu, meklējot informāciju par klientu:"+clientName+ "\n Kļūda"+ex.getMessage());
-                throw new Exception(ex.getMessage());
+        if (companyEntityManager!=null){
+            try {
+                List clientsList = companyEntityManager.createNamedQuery("Klienti.findByKlients")
+                    .setParameter("klients",clientName)
+                    .getResultList();
+                if(clientsList.size()!=0){
+                    clientInfo = (Klienti) clientsList.get(0);
+                } else{
+                    return null;
+                }
+            } catch (PersistenceException ex)  {
+                    throw new Exception(ex.getMessage());
+            }
         }
         return clientInfo;
     }
@@ -245,6 +254,14 @@ public class StoreHausFile  {
                     
                     try {
                         thisClientInfo=getClientInfo(docDirection=="IEE"?docReceiverName:docSenderName);
+                        if (thisClientInfo==null){
+                            docMindent=null;
+                            docSident=null;
+                        } else {
+                            docMindent=docDirection=="IEE"?thisClientInfo.getIdent():selectedCompanyData.getIdent();
+                            docSident=docDirection=="IEE"?selectedCompanyData.getIdent():thisClientInfo.getIdent();
+                        }
+                        
                     } catch (Exception  ex)  {
                         throw new Exception(ex.getMessage());
                     }
@@ -254,17 +271,24 @@ public class StoreHausFile  {
                         Gramata document = new Gramata();
                         document.setIdent(docIdents);
                         document.setDatums(docDate);
-                        document.setNum(docNumber);
+                        document.setNum(docNumber+docNumberAfix);
                         document.setValuta(docCurrency);
                         document.setSumma(docSum);
                         document.setADatums(new Date());
                         document.setDTips(docDirection);
                         document.setMaksa(docReceiverName);
-                        document.setMident(docDirection=="IEE"?thisClientInfo.getIdent():selectedCompanyData.getIdent());
+                        document.setMident(docMindent);
                         document.setSanem(docSenderName);
-                        document.setIdent(docDirection=="IEE"?selectedCompanyData.getIdent():thisClientInfo.getIdent());
+                        document.setSident(docSident);
                         document.setStavoklis((short)0);
                         document.setOTips("REK");
+                        document.setVidTips("1");
+                        document.setAlgas("K");
+                        document.setDarVeids("A");
+                        document.setTimeIns(new Date());
+                        document.setIevDat(new Date());
+                        document.setIevOp("SU");
+                        
                         companyEntityManager.persist(document);
 
                         Sadale sadale = new Sadale();
