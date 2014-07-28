@@ -139,11 +139,11 @@ public class StoreHausFile  {
     }
     
     
-    private boolean checkSadale (   Long        docIdent,
-                                    String      accountDebet, 
-                                    String      accountCredit, 
-                                    Date        docDate, 
-                                    BigDecimal  docSum ) throws Exception {
+    private boolean checkSadale (Long        docIdent,
+                                 String      accountDebet, 
+                                 String      accountCredit, 
+                                 Date        docDate, 
+                                 BigDecimal  docSum ) throws Exception {
        
         if (docIdent.equals(null)) 
             throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docIdent'\n"
@@ -182,15 +182,6 @@ public class StoreHausFile  {
                                 + "s.uz_k=      :uz_k_"
                                 + "s.datums=    :datums_"
                                 + "s.summa=     :summa_")
-                    
-                     accountDebet, 
-                                    String      accountCredit, 
-                                    Date        docDate, 
-                                    BigDecimal  docSum
-                    
-                    
-                    .setParameter("ident_",docIdent)
-                    .setParameter("datums_",documentDate)
                     .getResultList();
             
         }catch(Exception e){ 	          
@@ -200,18 +191,11 @@ public class StoreHausFile  {
                  throw new Exception(e); 
          } 
         thisTransaction.commit();
-        if(existDocumentList.size()!=0){
-            if (existDocumentList.size()==1){
-                thisDoc= (Gramata) existDocumentList.get(0);
-                return thisDoc.getIdent();
-
-            }
-            if (existDocumentList.size()>1){
-                throw new Exception("Dokuments ar numuru: "+ documentNumber+ " un datumu: "+documentDate.toString()
-                        +" sistēmā ir vairākos eksemplāros - netiks eksportēts!");
-            }
+        if(existSadaleList.size()!=0){
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
     
     private void insertDocument( String docCurrency,
@@ -260,18 +244,20 @@ public class StoreHausFile  {
                         companyEntityManager.persist(sadale);                    
                     thisTransaction.commit();
                 } else {
-                    thisTransaction.begin();
-                        Sadale sadale = new Sadale();
-                        sadale.setIdent(docIdents);
-                        sadale.setKontets(Boolean.FALSE);
-                        sadale.setUzK(docDebetAccont);
-                        sadale.setNoK(docCreditAccont);
-                        sadale.setSumma(docSum);
-                        sadale.setDatums(docDate);
-                        companyEntityManager.persist(sadale);
-                        BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
-                        thisDoc.setSumma(docNewSum);
-                    thisTransaction.commit();
+                    if (!checkSadale(docIdents,docDebetAccont,docCreditAccont,docDate,docSum)){
+                        thisTransaction.begin();
+                            Sadale sadale = new Sadale();
+                            sadale.setIdent(docIdents);
+                            sadale.setKontets(Boolean.FALSE);
+                            sadale.setUzK(docDebetAccont);
+                            sadale.setNoK(docCreditAccont);
+                            sadale.setSumma(docSum);
+                            sadale.setDatums(docDate);
+                            companyEntityManager.persist(sadale);
+                            BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
+                            thisDoc.setSumma(docNewSum);
+                        thisTransaction.commit();
+                    }
                 }
             }
         } catch (Exception  ex)  {
