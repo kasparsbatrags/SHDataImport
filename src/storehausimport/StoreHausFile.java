@@ -19,11 +19,13 @@ import java.util.Locale;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import static jdk.nashorn.internal.objects.NativeString.substring;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,6 +47,8 @@ public class StoreHausFile  {
     public EntityManager companyEntityManager;
     private EntityTransaction thisTransaction=null;
     private Klienti selectedCompanyData=null;
+    private boolean existRecordInSadale;
+    private Klienti thisClientInfo; 
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -138,6 +142,24 @@ public class StoreHausFile  {
         return null;
     }
     
+    private Klienti getClientInfo(String clientName) throws Exception{
+        
+        Klienti clientInfo=null;
+        
+        if (clientName.isEmpty()) 
+            throw new Exception("Neizdevās iegūt informāciju par klientu - trūkst parametrs 'clientName'\n"
+                    + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
+        
+        try {
+            clientInfo=(Klienti) companyEntityManager.createNamedQuery("Klienti.findByKlients")
+                .setParameter("klients",clientName)
+                .getSingleResult();
+        } catch (PersistenceException  ex)  {
+                JOptionPane.showMessageDialog(null,"Kļūda izpildot pieprasījumu, meklējot informāciju par klientu:"+clientName+ "\n Kļūda"+ex.getMessage());
+                throw new Exception(ex.getMessage());
+        }
+        return clientInfo;
+    }
     
     private boolean checkSadale (Long        docIdent,
                                  String      accountDebet, 
@@ -214,10 +236,20 @@ public class StoreHausFile  {
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
         try {
-            docIdents=checkDocumentExist(docDate, docNumber); 
+            try {
+                docIdents=checkDocumentExist(docDate, docNumber); 
+            } catch (Exception  ex)  {
+                        throw new Exception(ex.getMessage());
+            }
             if (docIdents != null && (thisDoc.getADatums().compareTo(new Date())>0) || docIdents == null){
                 thisTransaction=companyEntityManager.getTransaction();
                 if (docIdents == null){
+                    
+                    try {
+                        thisClientInfo=getClientInfo(docDirection=="IEE"?docReceiverName:docSenderName);
+                    } catch (Exception  ex)  {
+                        throw new Exception(ex.getMessage());
+                    }
                     thisTransaction.begin();
                         Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
                         docIdents=(Long) q.getSingleResult();
@@ -230,8 +262,11 @@ public class StoreHausFile  {
                         document.setADatums(new Date());
                         document.setDTips(docDirection);
                         document.setMaksa(docReceiverName);
+                        document.setMident(docDirection=="IEE"?thisClientInfo.getIdent():selectedCompanyData.getIdent());
                         document.setSanem(docSenderName);
+                        document.setIdent(docDirection=="IEE"?selectedCompanyData.getIdent():thisClientInfo.getIdent());
                         document.setStavoklis((short)0);
+                        document.setOTips("REK");
                         companyEntityManager.persist(document);
 
                         Sadale sadale = new Sadale();
@@ -244,7 +279,12 @@ public class StoreHausFile  {
                         companyEntityManager.persist(sadale);                    
                     thisTransaction.commit();
                 } else {
-                    if (!checkSadale(docIdents,docDebetAccont,docCreditAccont,docDate,docSum)){
+                    try { 
+                        existRecordInSadale=checkSadale(docIdents,docDebetAccont,docCreditAccont,docDate,docSum);
+                    } catch (Exception  ex)  {
+                        throw new Exception(ex.getMessage());
+                    }
+                    if (!existRecordInSadale){
                         thisTransaction.begin();
                             Sadale sadale = new Sadale();
                             sadale.setIdent(docIdents);
