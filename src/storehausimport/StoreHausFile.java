@@ -51,6 +51,8 @@ public class StoreHausFile  {
     private Long docMindent;
     private Long docSident;
     private String docNumberAfix="_SH";
+    private String docMcode;
+    private String docScode;
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -115,7 +117,7 @@ public class StoreHausFile  {
        
         List<Gramata> existDocumentList=null;
         try {
-            thisTransaction.begin();
+            //thisTransaction.begin();
             Map<String,Object> props = companyEntityManager.getProperties();
             existDocumentList = companyEntityManager
                     .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_")
@@ -129,7 +131,7 @@ public class StoreHausFile  {
 
                  throw new Exception(e); 
          } 
-        thisTransaction.commit();
+        //thisTransaction.commit();
         if(existDocumentList.size()!=0){
             if (existDocumentList.size()==1){
                 thisDoc= (Gramata) existDocumentList.get(0);
@@ -144,18 +146,25 @@ public class StoreHausFile  {
         return null;
     }
     
-    private Klienti getClientInfo(String clientName) throws Exception{
+    private Klienti getClientInfo(String clientName, String docSenderCode) throws Exception{
         
         entity.Klienti clientInfo=null;
-
+        List clientsList=null;
+        
         if (clientName.isEmpty()) 
             throw new Exception("Neizdevās iegūt informāciju par klientu - trūkst parametrs 'clientName'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         if (companyEntityManager!=null){
             try {
-                List clientsList = companyEntityManager.createNamedQuery("Klienti.findByKlients")
-                    .setParameter("klients",clientName)
-                    .getResultList();
+                if (docSenderCode.isEmpty()){
+                    clientsList = companyEntityManager.createNamedQuery("Klienti.findByKlients")
+                        .setParameter("klients",clientName)
+                        .getResultList();
+                } else {
+                    clientsList = companyEntityManager.createNamedQuery("Klienti.findByKods")
+                        .setParameter("kods",docSenderCode)
+                        .getResultList();
+                }
                 if(clientsList.size()!=0){
                     clientInfo = (Klienti) clientsList.get(0);
                 } else{
@@ -235,7 +244,9 @@ public class StoreHausFile  {
                                 BigDecimal docSum,
                                 String docReceiverName,
                                 String docSenderName,
-                                String docDirection
+                                String docDirection,
+                                String docSenderCode,
+                                Date docPayDate
                                 ) throws Exception{
 
         if (companyEntityManager.equals(null)){
@@ -253,13 +264,24 @@ public class StoreHausFile  {
                 if (docIdents == null){
                     
                     try {
-                        thisClientInfo=getClientInfo(docDirection=="IEE"?docReceiverName:docSenderName);
+                        thisClientInfo=getClientInfo(docDirection=="IEE"?docReceiverName:docSenderName, 
+                                docDirection=="IEE"?docSenderCode:"");
                         if (thisClientInfo==null){
                             docMindent=null;
+                            docMcode="";
                             docSident=null;
+                            docScode="";
                         } else {
                             docMindent=docDirection=="IEE"?thisClientInfo.getIdent():selectedCompanyData.getIdent();
+                            docMcode=docDirection=="IEE"?thisClientInfo.getKods():selectedCompanyData.getKods();
                             docSident=docDirection=="IEE"?selectedCompanyData.getIdent():thisClientInfo.getIdent();
+                            docScode=docDirection=="IEE"?selectedCompanyData.getKods():thisClientInfo.getKods();
+                            if (docDirection=="IEE"){
+                                docReceiverName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
+                            } else {
+                                docReceiverName=selectedCompanyData.getKlients()+", "+selectedCompanyData.getTips();
+                                docSenderName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
+                            }
                         }
                         
                     } catch (Exception  ex)  {
@@ -271,15 +293,22 @@ public class StoreHausFile  {
                         Gramata document = new Gramata();
                         document.setIdent(docIdents);
                         document.setDatums(docDate);
+                        document.setDokDat(docDate);
+                        document.setSDatums(docDate);
                         document.setNum(docNumber+docNumberAfix);
                         document.setValuta(docCurrency);
                         document.setSumma(docSum);
+                        document.setSummaV(docSum);
+                        document.setKurss(new BigDecimal("1"));
+                        document.setApmDat(docPayDate);
                         document.setADatums(new Date());
                         document.setDTips(docDirection);
                         document.setMaksa(docReceiverName);
                         document.setMident(docMindent);
+                        document.setMkods(docMcode);
                         document.setSanem(docSenderName);
                         document.setSident(docSident);
+                        document.setSkods(docScode);
                         document.setStavoklis((short)0);
                         document.setOTips("REK");
                         document.setVidTips("1");
@@ -288,9 +317,8 @@ public class StoreHausFile  {
                         document.setTimeIns(new Date());
                         document.setIevDat(new Date());
                         document.setIevOp("SU");
-                        
+                        document.setPamatoj("Importēts no StoreHaus "+new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
                         companyEntityManager.persist(document);
-
                         Sadale sadale = new Sadale();
                         sadale.setIdent(docIdents);
                         sadale.setKontets(Boolean.FALSE);
@@ -298,6 +326,7 @@ public class StoreHausFile  {
                         sadale.setNoK(docCreditAccont);
                         sadale.setSumma(docSum);
                         sadale.setDatums(docDate);
+                        sadale.setSummaV(null);
                         companyEntityManager.persist(sadale);                    
                     thisTransaction.commit();
                 } else {
@@ -315,6 +344,7 @@ public class StoreHausFile  {
                             sadale.setNoK(docCreditAccont);
                             sadale.setSumma(docSum);
                             sadale.setDatums(docDate);
+                            sadale.setSummaV(null);
                             companyEntityManager.persist(sadale);
                             BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
                             thisDoc.setSumma(docNewSum);
@@ -341,6 +371,8 @@ public class StoreHausFile  {
         String      docReceiverName="";
         String      docSenderName="";
         String      docDirection="";
+        String      docSenderCode="";
+        Date        docPayDate=null;
         
         if (nDocumentsList.getLength()==0) { 
             throw new Exception("Failā nav neviena dokumenta!");
@@ -361,8 +393,6 @@ public class StoreHausFile  {
                     String docDateText=eElement.getElementsByTagName("t113.3.7").item(0).getTextContent();
                     if (!docDateText.isEmpty()){
                         docDate=new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault()).parse(docDateText);
-                    } else {
-                        docDate=null; 
                     }
                     docCurrency=eElement.getElementsByTagName("t100.3.10").item(0).getTextContent();
                     docNumber=eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
@@ -374,16 +404,20 @@ public class StoreHausFile  {
                     }
                     docReceiverName=eElement.getElementsByTagName("t102.4.9").item(0).getTextContent();
                     docSenderName=eElement.getElementsByTagName("t102.4.8").item(0).getTextContent();
-                    
-                    if (docSenderName==selectedCompanyData.getKlients()) {
+                    if (docSenderName.endsWith(selectedCompanyData.getKlients())) {
                         docDirection="IZE";
                     } else {
                         docDirection="IEE";
                     }
+                    docSenderCode=eElement.getElementsByTagName("t102.3.8").item(0).getTextContent();
                     
+                    String docPayDateText=eElement.getElementsByTagName("t113.16.7").item(0).getTextContent();
+                    if (!docPayDateText.isEmpty()){
+                        docPayDate=new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault()).parse(docPayDateText);
+                    }
                     try {
-                        this.insertDocument(docCurrency, docDate, docNumber,docDebetAccont,docCreditAccont,docSum,
-                                docReceiverName,docSenderName,docDirection);
+                        insertDocument(docCurrency, docDate, docNumber,docDebetAccont,docCreditAccont,docSum,
+                                docReceiverName,docSenderName,docDirection,docSenderCode, docPayDate);
                      } catch (Exception  ex)  {
                          throw new Exception(ex);
                      }
