@@ -257,7 +257,6 @@ public class CompanieForImport extends javax.swing.JFrame {
         if (this.jtextSelectedCompany!=null && selectedCompanyEntityManager!=null){
             try {
                 try {
-                    //result=selectedCompanyEntityManager.createNativeQuery("SELECT count(1) FROM Gramata").getSingleResult();
                     selectedCompanyData=(Klienti) selectedCompanyEntityManager.createNamedQuery("Klienti.findByKlients")
                             .setParameter("klients",substring(companieForImport.getNosaukums(),0,companieForImport.getNosaukums().indexOf(",")))
                             .getSingleResult();
@@ -282,7 +281,6 @@ public class CompanieForImport extends javax.swing.JFrame {
                 storehausimport.mainFrame.setCompanyEntityManager(selectedCompanyEntityManager);
                 storehausimport.mainFrame.setSelectedCompanyData(selectedCompanyData);
                 jtextSelectedCompany.setText(companieForImport.getNosaukums());
-//                Map<String,Object> props = selectedCompanyEntityManager.getProperties();                   
             }
  
         }

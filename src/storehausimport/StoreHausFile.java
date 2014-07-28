@@ -139,9 +139,82 @@ public class StoreHausFile  {
     }
     
     
+    private boolean checkSadale (   Long        docIdent,
+                                    String      accountDebet, 
+                                    String      accountCredit, 
+                                    Date        docDate, 
+                                    BigDecimal  docSum ) throws Exception {
+       
+        if (docIdent.equals(null)) 
+            throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docIdent'\n"
+                    + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
+        if (accountDebet.isEmpty()) 
+            throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'accountDebet'\n"
+                    + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
+        if (accountCredit.equals(null)) 
+            throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'accountCredit'\n"
+            + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
+
+        if (docDate.equals(null)) 
+            throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docDate'\n"
+            + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
+
+        if (docSum.equals(null)) 
+            throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docSum'\n"
+            + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
+
+        if (companyEntityManager.equals(null)){
+            throw new Exception("Funkcijā checkSadale trūkst objekts 'companyEntityManager'. \n "
+                    + "Restartējiet aplikāciju un meģiniet vēlreiz, vai saznienieties ar izstrādātāju");
+        }
+        if (thisTransaction == null){
+             thisTransaction=companyEntityManager.getTransaction();
+        }    
+        
+        
+        
+        List<Sadale> existSadaleList=null;
+        try {
+            thisTransaction.begin();
+            existSadaleList = companyEntityManager
+                    .createQuery("select s from Sadale s where s.ident= :ident_ and "
+                                + "s.no_k=      :no_k_"
+                                + "s.uz_k=      :uz_k_"
+                                + "s.datums=    :datums_"
+                                + "s.summa=     :summa_")
+                    
+                     accountDebet, 
+                                    String      accountCredit, 
+                                    Date        docDate, 
+                                    BigDecimal  docSum
+                    
+                    
+                    .setParameter("ident_",docIdent)
+                    .setParameter("datums_",documentDate)
+                    .getResultList();
+            
+        }catch(Exception e){ 	          
+            if(thisTransaction.isActive())
+                thisTransaction.rollback();
+
+                 throw new Exception(e); 
+         } 
+        thisTransaction.commit();
+        if(existDocumentList.size()!=0){
+            if (existDocumentList.size()==1){
+                thisDoc= (Gramata) existDocumentList.get(0);
+                return thisDoc.getIdent();
+
+            }
+            if (existDocumentList.size()>1){
+                throw new Exception("Dokuments ar numuru: "+ documentNumber+ " un datumu: "+documentDate.toString()
+                        +" sistēmā ir vairākos eksemplāros - netiks eksportēts!");
+            }
+        }
+        return true;
+    }
     
-    
-    public void insertDocument( String docCurrency,
+    private void insertDocument( String docCurrency,
                                 Date docDate,
                                 String docNumber,
                                 String docDebetAccont,
@@ -158,47 +231,49 @@ public class StoreHausFile  {
         }
         try {
             docIdents=checkDocumentExist(docDate, docNumber); 
-            thisTransaction=companyEntityManager.getTransaction();
-            if (docIdents == null){
-                thisTransaction.begin();
-                    Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
-                    docIdents=(Long) q.getSingleResult();
-                    Gramata document = new Gramata();
-                    document.setIdent(docIdents);
-                    document.setDatums(docDate);
-                    document.setNum(docNumber);
-                    document.setValuta(docCurrency);
-                    document.setSumma(docSum);
-                    document.setADatums(new Date());
-                    document.setDTips(docDirection);
-                    document.setMaksa(docReceiverName);
-                    document.setSanem(docReceiverName);
-                    companyEntityManager.persist(document);
-                    
-                    Sadale sadale = new Sadale();
-                    sadale.setIdent(docIdents);
-                    sadale.setKontets(Boolean.FALSE);
-                    sadale.setUzK(docDebetAccont);
-                    sadale.setNoK(docCreditAccont);
-                    sadale.setSumma(docSum);
-                    sadale.setDatums(docDate);
-                    companyEntityManager.persist(sadale);                    
-                thisTransaction.commit();
-            } else {
-                thisTransaction.begin();
-                    Sadale sadale = new Sadale();
-                    sadale.setIdent(docIdents);
-                    sadale.setKontets(Boolean.FALSE);
-                    sadale.setUzK(docDebetAccont);
-                    sadale.setNoK(docCreditAccont);
-                    sadale.setSumma(docSum);
-                    sadale.setDatums(docDate);
-                    companyEntityManager.persist(sadale);
-                    BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
-                    thisDoc.setSumma(docNewSum);
-                thisTransaction.commit();
+            if (docIdents != null && (thisDoc.getADatums().compareTo(new Date())>0) || docIdents == null){
+                thisTransaction=companyEntityManager.getTransaction();
+                if (docIdents == null){
+                    thisTransaction.begin();
+                        Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
+                        docIdents=(Long) q.getSingleResult();
+                        Gramata document = new Gramata();
+                        document.setIdent(docIdents);
+                        document.setDatums(docDate);
+                        document.setNum(docNumber);
+                        document.setValuta(docCurrency);
+                        document.setSumma(docSum);
+                        document.setADatums(new Date());
+                        document.setDTips(docDirection);
+                        document.setMaksa(docReceiverName);
+                        document.setSanem(docSenderName);
+                        document.setStavoklis((short)0);
+                        companyEntityManager.persist(document);
+
+                        Sadale sadale = new Sadale();
+                        sadale.setIdent(docIdents);
+                        sadale.setKontets(Boolean.FALSE);
+                        sadale.setUzK(docDebetAccont);
+                        sadale.setNoK(docCreditAccont);
+                        sadale.setSumma(docSum);
+                        sadale.setDatums(docDate);
+                        companyEntityManager.persist(sadale);                    
+                    thisTransaction.commit();
+                } else {
+                    thisTransaction.begin();
+                        Sadale sadale = new Sadale();
+                        sadale.setIdent(docIdents);
+                        sadale.setKontets(Boolean.FALSE);
+                        sadale.setUzK(docDebetAccont);
+                        sadale.setNoK(docCreditAccont);
+                        sadale.setSumma(docSum);
+                        sadale.setDatums(docDate);
+                        companyEntityManager.persist(sadale);
+                        BigDecimal docNewSum=thisDoc.getSumma().add(docSum);
+                        thisDoc.setSumma(docNewSum);
+                    thisTransaction.commit();
+                }
             }
-           
         } catch (Exception  ex)  {
             if(companyEntityManager.getTransaction().isActive())
                 companyEntityManager.getTransaction().rollback();
@@ -233,7 +308,6 @@ public class StoreHausFile  {
             }
             for (int tempDocRows = 0; tempDocRows < nReportDocsList.getLength(); tempDocRows++) {
                 Node nDocumentRowNode = nReportDocsList.item(tempDocRows);
-                System.out.println("\nCurrent Element :" + nDocumentRowNode.getNodeName());
                 if (nDocumentRowNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nDocumentRowNode;
                     String docDateText=eElement.getElementsByTagName("t113.3.7").item(0).getTextContent();
