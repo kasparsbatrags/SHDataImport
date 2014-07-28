@@ -7,6 +7,7 @@
 package storehausimport;
 
 import entity.Firmas;
+import entity.Klienti;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import storehausimport.mainFrame;
-
+import static jdk.nashorn.internal.objects.NativeString.substring;
 /**
  *
  * @author Kaspars
@@ -26,8 +26,13 @@ public class CompanieForImport extends javax.swing.JFrame {
      * Creates new form CompanieForImport
      */
     public EntityManager selectedCompanyEntityManager=null;
-    private Object result;
     public entity.Firmas companieForImport=null;
+    public entity.Klienti selectedCompanyData=null;
+
+    public Object getSelectedCompanyData() {
+        return selectedCompanyData;
+    }
+
 
     public CompanieForImport() {
         initComponents();
@@ -191,7 +196,9 @@ public class CompanieForImport extends javax.swing.JFrame {
 
     private void jTableListOfCompanyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseClicked
         // TODO add your handling code here:
-        this.aceptCompanyChoose();
+       if (evt.getClickCount() == 2){
+         this.aceptCompanyChoose();
+       }
     }//GEN-LAST:event_jTableListOfCompanyMouseClicked
 
     /**
@@ -233,7 +240,7 @@ public class CompanieForImport extends javax.swing.JFrame {
     }
     
     private void aceptCompanyChoose(){
-     int[] selected = jTableListOfCompany.getSelectedRows();
+        int[] selected = jTableListOfCompany.getSelectedRows();
         if (selected.length>1){
             JOptionPane.showMessageDialog(null,"Izvēlieties tikai vienu firmu, kurā importēsiet dokumentus!");
             return;
@@ -250,12 +257,16 @@ public class CompanieForImport extends javax.swing.JFrame {
         if (this.jtextSelectedCompany!=null && selectedCompanyEntityManager!=null){
             try {
                 try {
-                    result=selectedCompanyEntityManager.createNativeQuery("SELECT count(1) FROM Gramata").getSingleResult();
+                    //result=selectedCompanyEntityManager.createNativeQuery("SELECT count(1) FROM Gramata").getSingleResult();
+                    selectedCompanyData=(Klienti) selectedCompanyEntityManager.createNamedQuery("Klienti.findByKlients")
+                            .setParameter("klients",substring(companieForImport.getNosaukums(),0,companieForImport.getNosaukums().indexOf(",")))
+                            .getSingleResult();
+                            
                 } catch (Exception  ex)  {
                     JOptionPane.showMessageDialog(null,"Datu bāzes pieslēguma pārbaude nav izdevusies!\n"+companieForImport.getNosaukums()+
                     " datu bāze ("+companieForImport.getFirma()+")\n"+ex.getMessage());
                 }
-                storehausimport.mainFrame.setCompanyEntityManager(selectedCompanyEntityManager);
+                
                 
             } catch (PersistenceException  ex)  {
                 JOptionPane.showMessageDialog(null,"Neizdevās pieslēgties pie "+companieForImport.getNosaukums()+
@@ -265,9 +276,11 @@ public class CompanieForImport extends javax.swing.JFrame {
                   selectedCompanyEntityManager.close();
                                            
             }
-            if (result.equals(null)){
+            if (selectedCompanyData.equals(null)){
                 selectedCompanyEntityManager=null;
             } else{
+                storehausimport.mainFrame.setCompanyEntityManager(selectedCompanyEntityManager);
+                storehausimport.mainFrame.setSelectedCompanyData(selectedCompanyData);
                 jtextSelectedCompany.setText(companieForImport.getNosaukums());
 //                Map<String,Object> props = selectedCompanyEntityManager.getProperties();                   
             }

@@ -1,5 +1,6 @@
 package storehausimport;
 
+import entity.Klienti;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -27,11 +28,25 @@ public class mainFrame extends javax.swing.JFrame {
     
     static final Logger logger = Logger.getLogger("SHImportLoger");
     static FileHandler fh;  
+
+    static void selectedCompanyData(Klienti selectedCompanyData) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
     public entity.Firmas companieForImport=null;
+    public static entity.Klienti selectedCompanyData=null;
     public static EntityManager companyEntityManager=null;
+
+    public Klienti getSelectedCompanyData() {
+        return selectedCompanyData;
+    }
+
+    public static void setSelectedCompanyData(Klienti selectedCompanyData) {
+        mainFrame.selectedCompanyData = selectedCompanyData;
+    }
+
 
     public EntityManager getCompanyEntityManager() {
         return companyEntityManager;
@@ -289,6 +304,7 @@ public class mainFrame extends javax.swing.JFrame {
             // TODO add your handling code here:
             StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);  
             shf.setCompanyEntityPUEntityManager(companyEntityManager);
+            shf.setSelectedCompanyData(selectedCompanyData);
             shf.importAllXmlData();
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);

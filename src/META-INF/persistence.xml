@@ -4,8 +4,6 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entity.Useri</class>
     <class>entity.Firmas</class>
-    <class>entity.Gramata</class>
-    <class>entity.Sadale</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/grals"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
@@ -17,6 +15,8 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entity.Gramata</class>
     <class>entity.Sadale</class>
+    <class>entity.Klienti</class>
+
   </persistence-unit>
   
 </persistence>

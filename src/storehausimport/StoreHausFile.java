@@ -7,6 +7,7 @@
 package storehausimport;
 
 import entity.Gramata;
+import entity.Klienti;
 import entity.Sadale;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import storehausimport.CompanieForImport;
 
 /**
  *
@@ -42,7 +44,15 @@ public class StoreHausFile  {
     Long docIdents=null;
     public EntityManager companyEntityManager;
     private EntityTransaction thisTransaction=null;
-    
+    private Klienti selectedCompanyData=null;
+
+    public Klienti getSelectedCompanyData() {
+        return selectedCompanyData;
+    }
+
+    public void setSelectedCompanyData(Klienti selectedCompanyData) {
+        this.selectedCompanyData = selectedCompanyData;
+    }
 
     public void setCompanyEntityPUEntityManager(EntityManager companyEntityManager) {
         this.companyEntityManager = companyEntityManager;
@@ -136,7 +146,11 @@ public class StoreHausFile  {
                                 String docNumber,
                                 String docDebetAccont,
                                 String docCreditAccont,
-                                BigDecimal docSum) throws Exception{
+                                BigDecimal docSum,
+                                String docReceiverName,
+                                String docSenderName,
+                                String docDirection
+                                ) throws Exception{
 
         if (companyEntityManager.equals(null)){
             throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityManager'. \n "
@@ -155,6 +169,10 @@ public class StoreHausFile  {
                     document.setNum(docNumber);
                     document.setValuta(docCurrency);
                     document.setSumma(docSum);
+                    document.setADatums(new Date());
+                    document.setDTips(docDirection);
+                    document.setMaksa(docReceiverName);
+                    document.setSanem(docReceiverName);
                     companyEntityManager.persist(document);
                     
                     Sadale sadale = new Sadale();
@@ -197,6 +215,9 @@ public class StoreHausFile  {
         String      docDebetAccont="";
         String      docCreditAccont="";
         BigDecimal  docSum=null;
+        String      docReceiverName="";
+        String      docSenderName="";
+        String      docDirection="";
         
         if (nDocumentsList.getLength()==0) { 
             throw new Exception("Failā nav neviena dokumenta!");
@@ -229,9 +250,18 @@ public class StoreHausFile  {
                     if(!docSumText.isEmpty()){
                         docSum= new BigDecimal(docSumText.replaceAll(",", ""));
                     }
+                    docReceiverName=eElement.getElementsByTagName("t102.4.9").item(0).getTextContent();
+                    docSenderName=eElement.getElementsByTagName("t102.4.8").item(0).getTextContent();
+                    
+                    if (docSenderName==selectedCompanyData.getKlients()) {
+                        docDirection="IZE";
+                    } else {
+                        docDirection="IEE";
+                    }
                     
                     try {
-                        this.insertDocument(docCurrency, docDate, docNumber,docDebetAccont,docCreditAccont,docSum);
+                        this.insertDocument(docCurrency, docDate, docNumber,docDebetAccont,docCreditAccont,docSum,
+                                docReceiverName,docSenderName,docDirection);
                      } catch (Exception  ex)  {
                          throw new Exception(ex);
                      }

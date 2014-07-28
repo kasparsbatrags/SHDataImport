@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import static jdk.nashorn.internal.objects.NativeString.substring;
 
 /**
  *
@@ -23,20 +24,12 @@ public class NewMain {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("storeHausImportPU");
-        EntityManager em = emf.createEntityManager();
         
-           List listResult = em.createQuery("select g from Gramata g where g.num= :num_")
-                    .setParameter("num_","2014-06/DU")
-                    .getResultList();
-          if(listResult.size()!=0){
-              Iterator itr = listResult.iterator();
-              while(itr.hasNext()){
-                Gramata users = (Gramata)itr.next();
-                System.out.print("Vards:"+users.getNum());
-                System.out.println();
-              }
-            }
+        String firma="Lursolkjljljljkljft ,SIA";
+        
+        System.out.println(substring(firma,0,firma.indexOf(",")));
+       
+        
     }
     
 }
