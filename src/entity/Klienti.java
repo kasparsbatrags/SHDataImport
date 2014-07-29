@@ -8,13 +8,20 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -131,6 +138,19 @@ public class Klienti implements Serializable {
     @Column(name = "vip")
     private BigDecimal vip;
 
+    private static int bankNr;
+    //private static final long serialVersionUID = 1L;
+
+    public int getBankNr() {
+        return bankNr;
+    }
+
+    public void setBankNr(int bankNr) {
+        this.bankNr = bankNr;
+    }
+
+    
+    
     public Klienti() {
     }
 

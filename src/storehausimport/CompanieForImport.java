@@ -11,6 +11,8 @@ import entity.Klienti;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
@@ -181,8 +183,12 @@ public class CompanieForImport extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableListOfCompanyKeyPressed
 
     private void buttonAceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAceptActionPerformed
-        // TODO add your handling code here:
-        this.aceptCompanyChoose();        
+        try {
+            // TODO add your handling code here:
+            this.aceptCompanyChoose();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null,"Kļūda: "+ex.getMessage());
+        }
     }//GEN-LAST:event_buttonAceptActionPerformed
 
     private void jTableListOfCompanyMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseMoved
@@ -197,7 +203,11 @@ public class CompanieForImport extends javax.swing.JFrame {
     private void jTableListOfCompanyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListOfCompanyMouseClicked
         // TODO add your handling code here:
        if (evt.getClickCount() == 2){
-         this.aceptCompanyChoose();
+           try {
+               this.aceptCompanyChoose();
+           } catch (Exception ex) {
+               JOptionPane.showMessageDialog(null,"Kļūda: "+ex.getMessage());
+           }
        }
     }//GEN-LAST:event_jTableListOfCompanyMouseClicked
 
@@ -239,7 +249,7 @@ public class CompanieForImport extends javax.swing.JFrame {
         });
     }
     
-    private void aceptCompanyChoose(){
+    private void aceptCompanyChoose() throws Exception{
         int[] selected = jTableListOfCompany.getSelectedRows();
         if (selected.length>1){
             JOptionPane.showMessageDialog(null,"Izvēlieties tikai vienu firmu, kurā importēsiet dokumentus!");
@@ -252,7 +262,11 @@ public class CompanieForImport extends javax.swing.JFrame {
         properties.put("javax.persistence.jdbc.user", "postgres");
         properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
         properties.put("javax.persistence.jdbc.password", "1");
-        selectedCompanyEntityManager=javax.persistence.Persistence.createEntityManagerFactory("selectedCompanyPU", properties).createEntityManager();
+        try {
+            selectedCompanyEntityManager=javax.persistence.Persistence.createEntityManagerFactory("selectedCompanyPU", properties).createEntityManager();
+        } catch (PersistenceException  ex)  {
+            throw new Exception(ex.getMessage());
+        }
 
         if (this.jtextSelectedCompany!=null && selectedCompanyEntityManager!=null){
             try {

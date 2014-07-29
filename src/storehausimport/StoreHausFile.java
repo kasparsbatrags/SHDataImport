@@ -7,6 +7,7 @@
 package storehausimport;
 
 import entity.Gramata;
+import entity.KlBanka;
 import entity.Klienti;
 import entity.Sadale;
 import java.io.File;
@@ -53,6 +54,8 @@ public class StoreHausFile  {
     private String docNumberAfix="_SH";
     private String docMcode;
     private String docScode;
+    private int docSbident;
+    private int docMbident;
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -169,7 +172,16 @@ public class StoreHausFile  {
                 }
                 if(clientsList.size()!=0){
                     clientInfo = (Klienti) clientsList.get(0);
+                    clientsBankList = companyEntityManager                            
+                        .createQuery("select min(k.nr) from KlBanka k where k.ident=:ident")
+                        .setParameter("ident",clientInfo.getIdent())
+                        .getResultList();
                     
+                    if(clientsBankList.size()!=0 && clientsBankList.get(0)!=null){
+                        clientInfo.setBankNr((int) clientsBankList.get(0));
+                    } else{
+                        clientInfo.setBankNr(0);
+                    }
                 } else{
                     return null;
                 }
@@ -278,19 +290,23 @@ public class StoreHausFile  {
                                 docReceiverName=selectedCompanyData.getKlients()+", "+selectedCompanyData.getTips();
                                 docSident=selectedCompanyData.getIdent();
                                 docScode=selectedCompanyData.getKods();
+                                docSbident=selectedCompanyData.getBankNr();
 
                                 docSenderName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
                                 docMident=thisClientInfo.getIdent();
                                 docMcode=thisClientInfo.getKods();
+                                docMbident=thisClientInfo.getBankNr();
 
                             } else {
                                 docReceiverName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
                                 docSident=thisClientInfo.getIdent();
                                 docScode=thisClientInfo.getKods();
-
+                                docSbident=thisClientInfo.getBankNr();
+                                
                                 docSenderName=selectedCompanyData.getKlients()+", "+selectedCompanyData.getTips();
                                 docMident=selectedCompanyData.getIdent();
                                 docMcode=selectedCompanyData.getKods();
+                                docMbident=selectedCompanyData.getBankNr();
                             }
                         }
                         
@@ -315,9 +331,11 @@ public class StoreHausFile  {
                         document.setDTips(docDirection);
                         document.setMaksa(docSenderName);
                         document.setMident(docMident);
+                        document.setMbident(docMbident);
                         document.setMkods(docMcode);
                         document.setSanem(docReceiverName);
                         document.setSident(docSident);
+                        document.setSbident(docSbident);
                         document.setSkods(docScode);
                         document.setStavoklis((short)0);
                         document.setOTips("REK");
@@ -327,6 +345,8 @@ public class StoreHausFile  {
                         document.setTimeIns(new Date());
                         document.setIevDat(new Date());
                         document.setIevOp("SU");
+                        document.setKontets(Boolean.FALSE);
+                        
                         document.setPamatoj("Importēts no StoreHaus "+new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
                         companyEntityManager.persist(document);
                         Sadale sadale = new Sadale();

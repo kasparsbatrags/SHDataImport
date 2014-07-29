@@ -16,7 +16,7 @@
     <class>entity.Gramata</class>
     <class>entity.Sadale</class>
     <class>entity.Klienti</class>
-
+    <class>entity.KlBanka</class>
   </persistence-unit>
   
 </persistence>
