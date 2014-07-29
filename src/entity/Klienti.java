@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -71,6 +72,13 @@ public class Klienti implements Serializable {
     @Basic(optional = false)
     @Column(name = "ident")
     private Long ident;
+    @OneToMany(mappedBy="ident")
+//    private Collection<KlBanka> bankas
+//    public Bankas(){
+//        bankas = new ArrajlList<KlBanka>();
+//    }
+//            
+//     
     @Column(name = "kods")
     private String kods;
     @Column(name = "nm_kods")

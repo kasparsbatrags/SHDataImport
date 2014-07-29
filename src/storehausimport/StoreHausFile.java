@@ -149,7 +149,9 @@ public class StoreHausFile  {
     private Klienti getClientInfo(String clientName, String docSenderCode) throws Exception{
         
         entity.Klienti clientInfo=null;
+        entity.KlBanka clientBankInfo=null;
         List clientsList=null;
+        List clientsBankList=null;
         
         if (clientName.isEmpty()) 
             throw new Exception("Neizdevās iegūt informāciju par klientu - trūkst parametrs 'clientName'\n"
@@ -167,6 +169,7 @@ public class StoreHausFile  {
                 }
                 if(clientsList.size()!=0){
                     clientInfo = (Klienti) clientsList.get(0);
+                    
                 } else{
                     return null;
                 }
