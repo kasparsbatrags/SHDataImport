@@ -48,7 +48,7 @@ public class StoreHausFile  {
     private Klienti selectedCompanyData=null;
     private boolean existRecordInSadale;
     private Klienti thisClientInfo; 
-    private Long docMindent;
+    private Long docMident;
     private Long docSident;
     private String docNumberAfix="_SH";
     private String docMcode;
@@ -264,23 +264,30 @@ public class StoreHausFile  {
                 if (docIdents == null){
                     
                     try {
-                        thisClientInfo=getClientInfo(docDirection=="IEE"?docReceiverName:docSenderName, 
-                                docDirection=="IEE"?docSenderCode:"");
+                        thisClientInfo=getClientInfo(docSenderName,docSenderCode);
                         if (thisClientInfo==null){
-                            docMindent=null;
+                            docMident=null;
                             docMcode="";
                             docSident=null;
                             docScode="";
                         } else {
-                            docMindent=docDirection=="IEE"?thisClientInfo.getIdent():selectedCompanyData.getIdent();
-                            docMcode=docDirection=="IEE"?thisClientInfo.getKods():selectedCompanyData.getKods();
-                            docSident=docDirection=="IEE"?selectedCompanyData.getIdent():thisClientInfo.getIdent();
-                            docScode=docDirection=="IEE"?selectedCompanyData.getKods():thisClientInfo.getKods();
                             if (docDirection=="IEE"){
-                                docReceiverName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
-                            } else {
                                 docReceiverName=selectedCompanyData.getKlients()+", "+selectedCompanyData.getTips();
+                                docSident=selectedCompanyData.getIdent();
+                                docScode=selectedCompanyData.getKods();
+
                                 docSenderName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
+                                docMident=thisClientInfo.getIdent();
+                                docMcode=thisClientInfo.getKods();
+
+                            } else {
+                                docReceiverName=thisClientInfo.getKlients()+", "+thisClientInfo.getTips();
+                                docSident=thisClientInfo.getIdent();
+                                docScode=thisClientInfo.getKods();
+
+                                docSenderName=selectedCompanyData.getKlients()+", "+selectedCompanyData.getTips();
+                                docMident=selectedCompanyData.getIdent();
+                                docMcode=selectedCompanyData.getKods();
                             }
                         }
                         
@@ -303,10 +310,10 @@ public class StoreHausFile  {
                         document.setApmDat(docPayDate);
                         document.setADatums(new Date());
                         document.setDTips(docDirection);
-                        document.setMaksa(docReceiverName);
-                        document.setMident(docMindent);
+                        document.setMaksa(docSenderName);
+                        document.setMident(docMident);
                         document.setMkods(docMcode);
-                        document.setSanem(docSenderName);
+                        document.setSanem(docReceiverName);
                         document.setSident(docSident);
                         document.setSkods(docScode);
                         document.setStavoklis((short)0);
@@ -403,12 +410,12 @@ public class StoreHausFile  {
                         docSum= new BigDecimal(docSumText.replaceAll(",", ""));
                     }
                     docReceiverName=eElement.getElementsByTagName("t102.4.9").item(0).getTextContent();
-                    docSenderName=eElement.getElementsByTagName("t102.4.8").item(0).getTextContent();
-                    if (docSenderName.endsWith(selectedCompanyData.getKlients())) {
-                        docDirection="IZE";
-                    } else {
+                    if (docReceiverName.endsWith(selectedCompanyData.getKlients())) {
                         docDirection="IEE";
-                    }
+                    } else {
+                        docDirection="IZE";
+                    } 
+                    docSenderName=eElement.getElementsByTagName("t102.4.8").item(0).getTextContent();
                     docSenderCode=eElement.getElementsByTagName("t102.3.8").item(0).getTextContent();
                     
                     String docPayDateText=eElement.getElementsByTagName("t113.16.7").item(0).getTextContent();

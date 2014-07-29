@@ -319,6 +319,7 @@ public class mainFrame extends javax.swing.JFrame {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,"Kļūda StoreHausFile! "+ex.getMessage());
         }
+        JOptionPane.showMessageDialog(null,"Importu pabeidzu!");
         
           
         
