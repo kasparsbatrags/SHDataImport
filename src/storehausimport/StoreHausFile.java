@@ -6,7 +6,6 @@
 package storehausimport;
 
 import entity.Gramata;
-import entity.KlBanka;
 import entity.Klienti;
 import entity.Sadale;
 import java.io.File;
@@ -25,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import static jdk.nashorn.internal.objects.NativeString.substring;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -50,7 +48,7 @@ public class StoreHausFile {
     private Klienti thisClientInfo;
     private Long docMident;
     private Long docSident;
-    private String docNumberAfix = "_SH";
+    private final String docNumberAfix = "_SH";
     private String docMcode;
     private String docScode;
     private int docSbident;
@@ -100,48 +98,33 @@ public class StoreHausFile {
     }
 
     private Long checkDocumentExist(Date documentDate, String documentNumber) throws Exception {
-        //if Document with number and date exist and it is one return document ident
-        //if document not exist - returning null
         if (documentNumber.isEmpty()) {
             throw new Exception("checkIsDocumentInserted netiek padots parametrs documentNumber\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
-        if (documentDate.equals(null)) {
+        if (documentDate == null) {
             throw new Exception("checkIsDocumentInserted netiek padots parametrs documentDate\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
 
-        if (companyEntityManager.equals(null)) {
-            throw new Exception("Funkcijā checkIsDocumentInserted trūkst objekts 'companyEntityManager'. \n "
+        if (companyEntityManager == null) {
+            throw new Exception("Funkcijā checkIsDocumentInserted trūkst objekts 'companyEntityManager'.\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
-        if (thisTransaction == null) {
-            thisTransaction = companyEntityManager.getTransaction();
-        }
-
         List<Gramata> existDocumentList = null;
         try {
-            //thisTransaction.begin();
-            Map<String, Object> props = companyEntityManager.getProperties();
             existDocumentList = companyEntityManager
                     .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_")
                     .setParameter("num_", documentNumber + docNumberAfix)
                     .setParameter("datums_", documentDate)
                     .getResultList();
-
         } catch (Exception e) {
-            if (thisTransaction.isActive()) {
-                thisTransaction.rollback();
-            }
-
             throw new Exception(e);
         }
-        //thisTransaction.commit();
         if (existDocumentList.size() != 0) {
             if (existDocumentList.size() == 1) {
                 thisDoc = (Gramata) existDocumentList.get(0);
                 return thisDoc.getIdent();
-
             }
             if (existDocumentList.size() > 1) {
                 throw new Exception("Dokuments ar numuru: " + documentNumber + " un datumu: " + documentDate.toString()
@@ -173,14 +156,14 @@ public class StoreHausFile {
                             .setParameter("kods", docSenderCode)
                             .getResultList();
                 }
-                if (clientsList.size() != 0) {
+                if (!clientsList.isEmpty()) {
                     clientInfo = (Klienti) clientsList.get(0);
                     clientsBankList = companyEntityManager
                             .createQuery("select min(k.nr) from KlBanka k where k.ident=:ident")
                             .setParameter("ident", clientInfo.getIdent())
                             .getResultList();
 
-                    if (clientsBankList.size() != 0 && clientsBankList.get(0) != null) {
+                    if (!clientsBankList.isEmpty() && clientsBankList.get(0) != null) {
                         clientInfo.setBankNr((int) clientsBankList.get(0));
                     } else {
                         clientInfo.setBankNr(0);
@@ -201,7 +184,7 @@ public class StoreHausFile {
             Date docDate,
             BigDecimal docSum) throws Exception {
 
-        if (docIdent.equals(null)) {
+        if (docIdent == null) {
             throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docIdent'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
@@ -209,22 +192,22 @@ public class StoreHausFile {
             throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'accountDebet'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
-        if (accountCredit.equals(null)) {
+        if (accountCredit == null) {
             throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'accountCredit'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
 
-        if (docDate.equals(null)) {
+        if (docDate == null) {
             throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docDate'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
 
-        if (docSum.equals(null)) {
+        if (docSum == null) {
             throw new Exception("Neizdevās pārbaudīt kontējumu - trūkst parametrs 'docSum'\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
         }
 
-        if (companyEntityManager.equals(null)) {
+        if (companyEntityManager == null) {
             throw new Exception("Funkcijā checkSadale trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz, vai saznienieties ar izstrādātāju");
         }
@@ -246,7 +229,7 @@ public class StoreHausFile {
         } catch (Exception e) {
             throw new Exception(e);
         }
-        return (existSadaleList.size() != 0);
+        return (!existSadaleList.isEmpty());
     }
 
     private void insertDocument(String docCurrency,
@@ -262,7 +245,7 @@ public class StoreHausFile {
             Date docPayDate
     ) throws Exception {
 
-        if (companyEntityManager.equals(null)) {
+        if (companyEntityManager == null) {
             throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
@@ -272,8 +255,9 @@ public class StoreHausFile {
             } catch (Exception ex) {
                 throw new Exception(ex.getMessage());
             }
+            thisTransaction = companyEntityManager.getTransaction();
             if (docIdents != null && (thisDoc.getADatums().compareTo(new Date()) > 0) || docIdents == null) {
-                thisTransaction = companyEntityManager.getTransaction();
+                
                 if (docIdents == null) {
 
                     try {
@@ -284,7 +268,7 @@ public class StoreHausFile {
                             docSident = null;
                             docScode = "";
                         } else {
-                            if (docDirection == "IEE") {
+                            if ("IEE".equals(docDirection)) {
                                 docReceiverName = selectedCompanyData.getKlients() + ", " + selectedCompanyData.getTips();
                                 docSident = selectedCompanyData.getIdent();
                                 docScode = selectedCompanyData.getKods();
@@ -348,6 +332,7 @@ public class StoreHausFile {
                     document.setPamatoj("Importēts no StoreHaus " + new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
                     companyEntityManager.persist(document);
                     thisTransaction.commit();
+                    storehausimport.mainFrame.addToLog("Pievienoja dokumentu Nr."+docNumber + docNumberAfix);
                     try {
                         existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                     } catch (Exception ex) {

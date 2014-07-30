@@ -1,11 +1,12 @@
 package storehausimport;
 
 import entity.Klienti;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.FileHandler;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import javax.persistence.EntityManager;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.OPEN_DIALOG;
@@ -26,12 +27,9 @@ import org.xml.sax.SAXException;
  */
 public class mainFrame extends javax.swing.JFrame {
     
-    static final Logger logger = Logger.getLogger("SHImportLoger");
-    static FileHandler fh;  
-
-    static void selectedCompanyData(Klienti selectedCompanyData) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    static void selectedCompanyData(Klienti selectedCompanyData) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
@@ -56,7 +54,13 @@ public class mainFrame extends javax.swing.JFrame {
         mainFrame.companyEntityManager = companyEntityManager;
     }
 
-
+    public static void addToLog(String message){
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("SHImportLog.txt", true)))) {
+            out.println(""+message+"\n");
+        }catch (IOException e) {
+            JOptionPane.showMessageDialog(null,"Kļūda saglabājot log failu! "+e.getMessage());
+        }
+    }
 
   
     
@@ -355,24 +359,13 @@ public class mainFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               
-//                try {                   
-////                    fh = new FileHandler("SHImporter.log");  
-////                    logger.addHandler(fh);
-////                    SimpleFormatter formatter = new SimpleFormatter();  
-//                    
-////                    fh.setFormatter(formatter);  
-//                    //logger.info("My first log");  
-//                    
-                    new mainFrame().setVisible(true);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
-//                } catch (SecurityException ex) {
-//                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+                new mainFrame().setVisible(true);
             }
         });
     }
+    
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane PanelFileRecordsInfo;
