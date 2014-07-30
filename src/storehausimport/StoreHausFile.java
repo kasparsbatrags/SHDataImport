@@ -83,15 +83,15 @@ public class StoreHausFile {
             Node nDocumentNode = nDocumentsList.item(temp);
             if (nDocumentNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element documentElement = (Element) nDocumentNode;
-                returnedMessage = returnedMessage + "StoreHaus sistēmas dokuments ar id" + documentElement.getAttribute("DocId") + "\n";
-                returnedMessage = returnedMessage + documentElement.getAttribute("Caption") + "\n";
-                returnedMessage = returnedMessage + "Dokuments sagatavots: " + documentElement.getAttribute("PrintDate") + "\n";
+                returnedMessage = returnedMessage + "StoreHaus sistēmas dokuments ar id" + documentElement.getAttribute("DocId") + System.lineSeparator();
+                returnedMessage = returnedMessage + documentElement.getAttribute("Caption") + System.lineSeparator();
+                returnedMessage = returnedMessage + "Dokuments sagatavots: " + documentElement.getAttribute("PrintDate") + System.lineSeparator();
             }
             NodeList nReportParametersList = doc.getElementsByTagName("Report_Row"); //list of parameter section in file
             if (nReportParametersList.getLength() == 0) {
                 throw new Exception("Trūkst tags: 'Report_Row'");
             }
-            returnedMessage = returnedMessage + "Kopējais grāmatojumu skaits:" + nReportParametersList.getLength() + "\n";
+            returnedMessage = returnedMessage + "Kopējais grāmatojumu skaits:" + nReportParametersList.getLength() + System.lineSeparator();
         }
         return returnedMessage;
     }

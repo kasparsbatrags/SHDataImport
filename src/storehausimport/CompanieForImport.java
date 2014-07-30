@@ -295,6 +295,7 @@ public class CompanieForImport extends javax.swing.JFrame {
                 storehausimport.mainFrame.setCompanyEntityManager(selectedCompanyEntityManager);
                 storehausimport.mainFrame.setSelectedCompanyData(selectedCompanyData);
                 jtextSelectedCompany.setText(companieForImport.getNosaukums());
+                storehausimport.mainFrame.addToLog("Izvēlēta firma: "+companieForImport.getNosaukums()+" datu importēšanai.");
             }
  
         }
