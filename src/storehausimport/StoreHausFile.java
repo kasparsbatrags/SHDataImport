@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
@@ -220,8 +219,8 @@ public class StoreHausFile {
                             + "and s.datums=:datums_ "
                             + "and s.summa=:summa_")
                     .setParameter("ident_", docIdent)
-                    .setParameter("no_k_", accountDebet)
-                    .setParameter("uz_k_", accountCredit)
+                    .setParameter("no_k_", accountCredit)
+                    .setParameter("uz_k_", accountDebet)
                     .setParameter("datums_", docDate)
                     .setParameter("summa_", docSum)
                     .getResultList();
@@ -263,10 +262,25 @@ public class StoreHausFile {
                     try {
                         thisClientInfo = getClientInfo(docSenderName, docSenderCode);
                         if (thisClientInfo == null) {
-                            docMident = null;
-                            docMcode = "";
-                            docSident = null;
-                            docScode = "";
+                            if ("IEE".equals(docDirection)) {
+                                docMident = null;
+                                docMcode = "";
+                                docMbident = 0;
+                                docSident = selectedCompanyData.getIdent();
+                                docScode = selectedCompanyData.getKods();
+                                docSbident = selectedCompanyData.getBankNr();
+                                docReceiverName = selectedCompanyData.getKlients() + ", " + selectedCompanyData.getTips();
+                            }else {
+                                docSident = null;
+                                docScode = "";
+                                docSbident = 0;
+                                docMident = selectedCompanyData.getIdent();
+                                docMcode = selectedCompanyData.getKods();
+                                docMbident = selectedCompanyData.getBankNr();
+                                docSenderName = selectedCompanyData.getKlients() + ", " + selectedCompanyData.getTips();
+                            }
+                                
+                                    
                         } else {
                             if ("IEE".equals(docDirection)) {
                                 docReceiverName = selectedCompanyData.getKlients() + ", " + selectedCompanyData.getTips();
@@ -332,7 +346,7 @@ public class StoreHausFile {
                     document.setPamatoj("Importēts no StoreHaus " + new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
                     companyEntityManager.persist(document);
                     thisTransaction.commit();
-                    storehausimport.mainFrame.addToLog("Pievienoja dokumentu Nr."+docNumber + docNumberAfix);
+                    storehausimport.mainFrame.addToLog("Pievienoja dokumentu Nr. "+docNumber + docNumberAfix);
                     try {
                         existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                     } catch (Exception ex) {
@@ -350,6 +364,9 @@ public class StoreHausFile {
                         sadale.setSummaV(null);
                         companyEntityManager.persist(sadale);
                         thisTransaction.commit();
+                        storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" kontējumu debets:"+
+                            docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum);
+
                     }
                 }
             } else {
@@ -373,6 +390,9 @@ public class StoreHausFile {
                     thisDoc.setSumma(docNewSum);
                     thisDoc.setSummaV(docNewSum);
                     thisTransaction.commit();
+                    storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" kontējumu debets:"+
+                            docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum);
+                    
                 }
             }
         } catch (Exception ex) {
@@ -380,6 +400,8 @@ public class StoreHausFile {
                 companyEntityManager.getTransaction().rollback();
             }
             JOptionPane.showMessageDialog(null, "Neizdevās pievienot ierakstu.\nKļūda: " + ex.getMessage());
+            storehausimport.mainFrame.addToLog("Neizdevās pievienot ierakstu. Kļūda:" + ex.getMessage());
+
         }
     }
 

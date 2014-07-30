@@ -5,6 +5,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -27,15 +31,13 @@ import org.xml.sax.SAXException;
  */
 public class mainFrame extends javax.swing.JFrame {
     
-//    static void selectedCompanyData(Klienti selectedCompanyData) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
     public entity.Firmas companieForImport=null;
     public static entity.Klienti selectedCompanyData=null;
     public static EntityManager companyEntityManager=null;
+    private static String logFileIndex="";
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -55,13 +57,20 @@ public class mainFrame extends javax.swing.JFrame {
     }
 
     public static void addToLog(String message){
-        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("SHImportLog.txt", true)))) {
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ImportLog_"+logFileIndex+".txt", true)))) {
             out.println(""+message+"\n");
         }catch (IOException e) {
-            JOptionPane.showMessageDialog(null,"Kļūda saglabājot log failu! "+e.getMessage());
+            JOptionPane.showMessageDialog(null,"Kļūda saglabājot žurnālēšanas failu! "+e.getMessage());
         }
     }
 
+    public static void addToErrorLog(String message){
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ErrorLog.txt", true)))) {
+            out.println(""+message+"\n");
+        }catch (IOException e) {
+            JOptionPane.showMessageDialog(null,"Kļūda saglabājot failu ! "+e.getMessage());
+        }
+    }
   
     
     /**
@@ -254,18 +263,14 @@ public class mainFrame extends javax.swing.JFrame {
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,ex.getMessage());
-//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (SAXException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,"Kļūda faila "+xmlFileWithFullPath+" struktūrā!"+"\n"+ex.getMessage());
-//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (IOException ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
                 JOptionPane.showMessageDialog(null,"Kļūda faila "+xmlFileWithFullPath+" nolasīšanā! "+"\n"+ex.getMessage());
-//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
             } catch (Exception ex) {
                 Logger.getLogger(mainFrame.class.getName()).log(Level.FINER, null, ex);
-//                logger.info(ex.getMessage()+" "+labelSelectedXmlFile);
                 JOptionPane.showMessageDialog(null,"Kļūda! Fails "+xmlFileWithFullPath+" neatbilst noteiktai StoreHaus struktūrai! "+"\n"+ex.getMessage());
             }
            
@@ -294,8 +299,6 @@ public class mainFrame extends javax.swing.JFrame {
         selectedComanieForImport.setcompanieForImport(companieForImport);
         selectedComanieForImport.setJtextSelectedCompany(jtextSelectedCompany);
         selectedComanieForImport.setVisible(true);
-//        companyEntityManager = javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-//        selectedComanieForImport.setSelectedCompanyEntityManager(companyEntityManager);
         this.labelSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.jtextSelectedCompany.setEnabled(!selectedComanieForImport.equals(null));
         this.buttonChoseFile.setEnabled(!selectedComanieForImport.equals(null));
@@ -310,13 +313,7 @@ public class mainFrame extends javax.swing.JFrame {
             shf.setCompanyEntityPUEntityManager(companyEntityManager);
             shf.setSelectedCompanyData(selectedCompanyData);
             shf.importAllXmlData();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null,ex.getMessage());
-        } catch (SAXException ex) {
-            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null,ex.getMessage());
-        } catch (IOException ex) {
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,ex.getMessage());
         } catch (Exception ex) {
@@ -357,10 +354,11 @@ public class mainFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new mainFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new mainFrame().setVisible(true);
+            DateFormat df = new SimpleDateFormat("mmdd_HHmm");
+            Date today = Calendar.getInstance().getTime();
+            logFileIndex=df.format(today);
         });
     }
     
