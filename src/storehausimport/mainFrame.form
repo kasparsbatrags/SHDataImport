@@ -35,23 +35,31 @@
                       <Component id="jButton1" min="-2" pref="105" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="buttonChoseFile" pref="110" max="32767" attributes="0"/>
-                          <Component id="buttonImportData" pref="110" max="32767" attributes="0"/>
-                          <Component id="buttonChooseCompany" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="buttonChoseFile" pref="110" max="32767" attributes="0"/>
+                                  <Component id="buttonChooseCompany" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="labelFileRecordsInfo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="labelXmlFilePath" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                                  <Component id="labelSelectedCompany" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="buttonImportData" min="-2" pref="110" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="labelProcesInfo" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="labelFileRecordsInfo" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="labelXmlFilePath" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
-                          <Component id="labelSelectedCompany" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTextField1" max="32767" attributes="0"/>
-                          <Component id="jtextSelectedCompany" alignment="0" pref="471" max="32767" attributes="0"/>
+                          <Component id="jtextSelectedCompany" alignment="0" pref="485" max="32767" attributes="0"/>
                           <Component id="labelSelectedXmlFile" max="32767" attributes="0"/>
-                          <Component id="jScrollPane1" pref="471" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="485" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" alignment="1" pref="485" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -68,23 +76,31 @@
                   <Component id="jtextSelectedCompany" alignment="3" max="32767" attributes="0"/>
                   <Component id="buttonChooseCompany" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="labelXmlFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="labelSelectedXmlFile" alignment="3" max="32767" attributes="0"/>
                   <Component id="buttonChoseFile" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="labelFileRecordsInfo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="buttonImportData" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="labelFileRecordsInfo" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jTextField1" pref="121" max="32767" attributes="0"/>
-              <EmptySpace pref="16" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="labelProcesInfo" min="-2" max="-2" attributes="0"/>
+                          <Component id="jScrollPane2" pref="120" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="buttonImportData" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
@@ -180,14 +196,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChooseCompanyActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField1ActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
         <Property name="text" type="java.lang.String" value="Beigt darbu"/>
@@ -203,5 +211,29 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
       </Events>
     </Component>
+    <Component class="javax.swing.JLabel" name="labelProcesInfo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Inform&#x101;cija par procesa gaitu:"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTextPane" name="PanelProcessInfo">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+          </AuxValues>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>
