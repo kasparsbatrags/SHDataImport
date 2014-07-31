@@ -1,8 +1,10 @@
 package storehausimport;
 
 import entity.Klienti;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -42,7 +44,8 @@ public class mainFrame extends javax.swing.JFrame {
     public static EntityManager companyEntityManager=null;
     private static String logFileIndex="";
     private static FileReader inputProcessLogFile = null;
-    private static BufferedReader br;
+    private static BufferedReader logFileBufferReader;
+    private Component saveFileFrame;
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -92,8 +95,8 @@ public class mainFrame extends javax.swing.JFrame {
             throw new Exception(e);
         }
         try {
-            br = new BufferedReader(inputProcessLogFile);
-            PanelProcessInfo.read(br, br);
+            logFileBufferReader = new BufferedReader(inputProcessLogFile);
+            PanelProcessInfo.read(logFileBufferReader, logFileBufferReader);
             PanelProcessInfo.setCaretPosition(PanelProcessInfo.getDocument().getLength());
         } catch (Exception ex) {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,6 +137,8 @@ public class mainFrame extends javax.swing.JFrame {
         labelProcesInfo = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         PanelProcessInfo = new javax.swing.JTextPane();
+        buttonSaveProcessInfo = new javax.swing.JButton();
+        buttonPrintProcessInfo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(779, 472));
@@ -216,6 +221,24 @@ public class mainFrame extends javax.swing.JFrame {
         PanelProcessInfo.setEnabled(false);
         jScrollPane2.setViewportView(PanelProcessInfo);
 
+        buttonSaveProcessInfo.setText("Saglabāt pdf");
+        buttonSaveProcessInfo.setToolTipText("Saglabāt procesa gaitu pdf failā");
+        buttonSaveProcessInfo.setEnabled(false);
+        buttonSaveProcessInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSaveProcessInfoActionPerformed(evt);
+            }
+        });
+
+        buttonPrintProcessInfo.setText("Drukāt atskaiti");
+        buttonPrintProcessInfo.setToolTipText("Drukāt procesa gaitu");
+        buttonPrintProcessInfo.setEnabled(false);
+        buttonPrintProcessInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPrintProcessInfoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -227,20 +250,23 @@ public class mainFrame extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(buttonChoseFile, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                                    .addComponent(buttonChooseCompany, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelFileRecordsInfo)
-                                    .addComponent(labelXmlFilePath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelSelectedCompany, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(buttonImportData, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelProcesInfo)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(buttonChoseFile, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                                        .addComponent(buttonChooseCompany, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(labelFileRecordsInfo)
+                                        .addComponent(labelXmlFilePath, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelSelectedCompany, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(buttonImportData, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(labelProcesInfo)))
+                            .addComponent(buttonSaveProcessInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonPrintProcessInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jtextSelectedCompany, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
@@ -269,13 +295,16 @@ public class mainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelProcesInfo)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                        .addGap(17, 17, 17))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonImportData)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonPrintProcessInfo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buttonSaveProcessInfo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(labelProcesInfo)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                .addGap(17, 17, 17)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -373,7 +402,8 @@ public class mainFrame extends javax.swing.JFrame {
         }
         storehausimport.mainFrame.addToLog("Imports pabeigts veiksmīgi!");
         JOptionPane.showMessageDialog(null,"Importu pabeidzu!");
-        
+        this.buttonPrintProcessInfo.setEnabled(PanelProcessInfo.getDocument().getLength()>0);
+        this.buttonSaveProcessInfo.setEnabled(PanelProcessInfo.getDocument().getLength()>0);
           
         
     }//GEN-LAST:event_buttonImportDataActionPerformed
@@ -383,6 +413,26 @@ public class mainFrame extends javax.swing.JFrame {
         this.dispose();
         System.exit(0);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void buttonSaveProcessInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveProcessInfoActionPerformed
+        // TODO add your handling code here:
+        String filename = File.separator+"pdf";
+        JFileChooser fileChooser = new JFileChooser(new File(filename));
+        fileChooser.showSaveDialog(saveFileFrame);
+        if (!fileChooser.getSelectedFile().toString().isEmpty()){
+            try {
+                SaveToPdf save = new SaveToPdf();
+                save.save("ImportLog_"+logFileIndex+".txt", fileChooser.getSelectedFile().toString());
+            } catch (Exception ex) {
+                Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+    }//GEN-LAST:event_buttonSaveProcessInfoActionPerformed
+
+    private void buttonPrintProcessInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintProcessInfoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonPrintProcessInfoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -429,6 +479,8 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonChooseCompany;
     private javax.swing.JButton buttonChoseFile;
     private javax.swing.JButton buttonImportData;
+    private javax.swing.JButton buttonPrintProcessInfo;
+    private javax.swing.JButton buttonSaveProcessInfo;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

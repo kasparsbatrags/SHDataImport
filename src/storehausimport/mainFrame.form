@@ -35,24 +35,28 @@
                       <Component id="jButton1" min="-2" pref="105" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="buttonChoseFile" pref="110" max="32767" attributes="0"/>
-                                  <Component id="buttonChooseCompany" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="buttonChoseFile" pref="110" max="32767" attributes="0"/>
+                                      <Component id="buttonChooseCompany" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="labelFileRecordsInfo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelXmlFilePath" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                                      <Component id="labelSelectedCompany" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="labelFileRecordsInfo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelXmlFilePath" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
-                                  <Component id="labelSelectedCompany" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="buttonImportData" min="-2" pref="110" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="labelProcesInfo" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="buttonImportData" min="-2" pref="110" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="labelProcesInfo" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="buttonSaveProcessInfo" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                          <Component id="buttonPrintProcessInfo" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -90,17 +94,19 @@
               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="labelProcesInfo" min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" pref="120" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
                       <Component id="buttonImportData" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="buttonPrintProcessInfo" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="buttonSaveProcessInfo" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="labelProcesInfo" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="jScrollPane2" pref="120" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
@@ -235,5 +241,25 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="buttonSaveProcessInfo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Saglab&#x101;t pdf"/>
+        <Property name="toolTipText" type="java.lang.String" value="Saglab&#x101;t procesa gaitu pdf fail&#x101;"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSaveProcessInfoActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonPrintProcessInfo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Druk&#x101;t atskaiti"/>
+        <Property name="toolTipText" type="java.lang.String" value="Druk&#x101;t procesa gaitu"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonPrintProcessInfoActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>
