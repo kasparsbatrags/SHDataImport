@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,6 +19,16 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.ServiceUI;
+import javax.print.SimpleDoc;
+import javax.print.attribute.AttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.OPEN_DIALOG;
 import javax.swing.JOptionPane;
@@ -231,6 +242,7 @@ public class mainFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonPrintProcessInfo.setVisible(false);
         buttonPrintProcessInfo.setText("Drukāt atskaiti");
         buttonPrintProcessInfo.setToolTipText("Drukāt procesa gaitu");
         buttonPrintProcessInfo.setEnabled(false);
@@ -463,6 +475,52 @@ public class mainFrame extends javax.swing.JFrame {
 
     private void buttonPrintProcessInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintProcessInfoActionPerformed
         // TODO add your handling code here:
+        FileInputStream textStream = null;
+        try {
+            textStream = new FileInputStream("ImportLog_"+logFileIndex+".txt");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+        Doc mydoc = new SimpleDoc(textStream, flavor, null);
+        AttributeSet aset = null;
+
+        PrintService[] services = PrintServiceLookup.lookupPrintServices(
+				flavor, aset);
+   PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+
+   if(services.length == 0) {
+       if(defaultService == null) {
+             //no printer found
+
+       } else {
+           try {
+               //print using default
+               DocPrintJob job = defaultService.createPrintJob();
+               job.print(mydoc, (PrintRequestAttributeSet) aset);
+           } catch (PrintException ex) {
+               Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+           }
+
+       }
+
+    } else {
+
+       //built in UI for printing you may not use this
+       PrintService service = ServiceUI.printDialog(null, 200, 200, services, defaultService, flavor, (PrintRequestAttributeSet) aset);
+
+
+        if (service != null)
+        {
+           try {
+               DocPrintJob job = service.createPrintJob();
+               job.print(mydoc, (PrintRequestAttributeSet) aset);
+           } catch (PrintException ex) {
+               Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+           }
+        }
+
+    }
     }//GEN-LAST:event_buttonPrintProcessInfoActionPerformed
 
     /**
