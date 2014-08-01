@@ -258,10 +258,10 @@ public class CompanieForImport extends javax.swing.JFrame {
         entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
         
         Map properties = new HashMap();
-        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
-        properties.put("javax.persistence.jdbc.user", "postgres");
+        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://192.168.11.11:5432/"+companieForImport.getFirma());
+        properties.put("javax.persistence.jdbc.user", "grals");
         properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
-        properties.put("javax.persistence.jdbc.password", "1");
+        properties.put("javax.persistence.jdbc.password", "79ENwAjUpXxls3Dh6RXo");
         try {
             selectedCompanyEntityManager=javax.persistence.Persistence.createEntityManagerFactory("selectedCompanyPU", properties).createEntityManager();
         } catch (PersistenceException  ex)  {

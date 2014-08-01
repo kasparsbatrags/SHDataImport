@@ -346,7 +346,7 @@ public class StoreHausFile {
                     document.setPamatoj("Importēts no StoreHaus " + new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
                     companyEntityManager.persist(document);
                     thisTransaction.commit();
-                    storehausimport.mainFrame.addToLog("Pievienoja dokumentu Nr. "+docNumber + docNumberAfix);
+                    storehausimport.mainFrame.addToLog("Pievienots dokumentu Nr. "+docNumber + docNumberAfix);
                     try {
                         existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                     } catch (Exception ex) {
@@ -370,8 +370,7 @@ public class StoreHausFile {
                     }
                 }
             } else {
-                storehausimport.mainFrame.addToLog("Kontējums dokumentam Nr. "+docNumber + docNumberAfix+" debets:"+
-                    docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum+" jau eksistē sistēmā - netika pievienots");
+                storehausimport.mainFrame.addToLog("Dokuments Nr. "+docNumber + docNumberAfix+" jau eksistē sistēmā - netika pievienots");
                 try {
                     existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                 } catch (Exception ex) {
