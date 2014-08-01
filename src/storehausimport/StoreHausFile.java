@@ -74,7 +74,7 @@ public class StoreHausFile {
     }
 
     public String getXmlFileInfo() throws Exception {
-        String returnedMessage = "";
+        String message = "";
         NodeList nDocumentsList = doc.getElementsByTagName("DmCtrlDoc"); //list of documents in file
         if (nDocumentsList.getLength() == 0) {
             throw new Exception("Trūkst tags: 'DmCtrlDoc'");
@@ -83,17 +83,17 @@ public class StoreHausFile {
             Node nDocumentNode = nDocumentsList.item(temp);
             if (nDocumentNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element documentElement = (Element) nDocumentNode;
-                returnedMessage = returnedMessage + "StoreHaus sistēmas dokuments ar id" + documentElement.getAttribute("DocId") + System.lineSeparator();
-                returnedMessage = returnedMessage + documentElement.getAttribute("Caption") + System.lineSeparator();
-                returnedMessage = returnedMessage + "Dokuments sagatavots: " + documentElement.getAttribute("PrintDate") + System.lineSeparator();
+                message = message + "StoreHaus sistēmas dokuments ar id" + documentElement.getAttribute("DocId") + System.lineSeparator();
+                message = message + documentElement.getAttribute("Caption") + System.lineSeparator();
+                message = message + "Dokuments sagatavots: " + documentElement.getAttribute("PrintDate") + System.lineSeparator();
             }
             NodeList nReportParametersList = doc.getElementsByTagName("Report_Row"); //list of parameter section in file
             if (nReportParametersList.getLength() == 0) {
                 throw new Exception("Trūkst tags: 'Report_Row'");
             }
-            returnedMessage = returnedMessage + "Kopējais grāmatojumu skaits:" + nReportParametersList.getLength() + System.lineSeparator();
+            message = message + "Kopējais grāmatojumu skaits:" + nReportParametersList.getLength() + System.lineSeparator();
         }
-        return returnedMessage;
+        return message;
     }
 
     private Long checkDocumentExist(Date documentDate, String documentNumber) throws Exception {
@@ -370,6 +370,8 @@ public class StoreHausFile {
                     }
                 }
             } else {
+                storehausimport.mainFrame.addToLog("Kontējums dokumentam Nr. "+docNumber + docNumberAfix+" debets:"+
+                    docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum+" jau eksistē sistēmā - netika pievienots");
                 try {
                     existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                 } catch (Exception ex) {
@@ -390,8 +392,12 @@ public class StoreHausFile {
                     thisDoc.setSumma(docNewSum);
                     thisDoc.setSummaV(docNewSum);
                     thisTransaction.commit();
-                    storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" kontējumu debets:"+
+                    storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" ar kontējumu debets:"+
                             docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum);
+                    
+                } else {
+                    storehausimport.mainFrame.addToLog("Kontējums dokumentam Nr. "+docNumber + docNumberAfix+" debets:"+
+                            docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum+" jau eksistē sistēmā - netika pievienots");
                     
                 }
             }

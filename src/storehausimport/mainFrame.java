@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -66,7 +67,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     public static void addToLog(String message){
         try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ImportLog_"+logFileIndex+".txt", true)))) {
-            out.println(Calendar.getInstance().getTime().toString()+" "+message+"\n");
+            out.println(message+System.lineSeparator());
             //out.close();
         }catch (IOException e) {
             JOptionPane.showMessageDialog(null,"Kļūda saglabājot žurnālēšanas failu! "+e.getMessage());
@@ -418,16 +419,46 @@ public class mainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String filename = File.separator+"pdf";
         JFileChooser fileChooser = new JFileChooser(new File(filename));
-        fileChooser.showSaveDialog(saveFileFrame);
-        if (!fileChooser.getSelectedFile().toString().isEmpty()){
-            try {
-                SaveToPdf save = new SaveToPdf();
-                save.save("ImportLog_"+logFileIndex+".txt", fileChooser.getSelectedFile().toString());
-            } catch (Exception ex) {
-                Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PDF Documents", "pdf"));
+        fileChooser.setAcceptAllFileFilterUsed(true);
+        int result = fileChooser.showSaveDialog(saveFileFrame);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            if(fileChooser.getSelectedFile().exists()){
+                int result_ = JOptionPane.showConfirmDialog(this,"Fails jau eksistē, rakstīt virsū?","Eksistējošs fails",JOptionPane.YES_NO_CANCEL_OPTION);
+                switch(result_){
+                    case JOptionPane.YES_OPTION:
+                        try {
+                            SaveToPdf save = new SaveToPdf();
+                            if (save.save("ImportLog_"+logFileIndex+".txt", fileChooser.getSelectedFile().toString())){
+                                 JOptionPane.showMessageDialog(null,"Fails saglabāts veiksmīgi!");
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(null,"Kļūda saglabājot failu! "+fileChooser.getSelectedFile().toString()+
+                                    "\n"+ex.getMessage());
+                        }
+                        return ;
+                    case JOptionPane.NO_OPTION:
+                        return;
+                    case JOptionPane.CLOSED_OPTION:
+                        return;
+                    case JOptionPane.CANCEL_OPTION:
+                        return;
+                }
+            } else {
+                try {
+                    SaveToPdf save = new SaveToPdf();
+                    if (save.save("ImportLog_"+logFileIndex+".txt", fileChooser.getSelectedFile().toString())){
+                        JOptionPane.showMessageDialog(null,"Fails saglabāts veiksmīgi!");
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null,"Kļūda saglabājot failu! "+fileChooser.getSelectedFile().toString()+
+                        "\n"+ex.getMessage());
+                }
             }
         }
-        
     }//GEN-LAST:event_buttonSaveProcessInfoActionPerformed
 
     private void buttonPrintProcessInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintProcessInfoActionPerformed
