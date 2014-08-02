@@ -2,6 +2,8 @@ package storehausimport;
 
 import entity.Klienti;
 import java.awt.Component;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +32,7 @@ import javax.print.ServiceUI;
 import javax.print.SimpleDoc;
 import javax.print.attribute.AttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.OPEN_DIALOG;
 import javax.swing.JOptionPane;
@@ -123,6 +127,8 @@ public class mainFrame extends javax.swing.JFrame {
      */
     public mainFrame() {
         initComponents();
+        setIcon();
+        
            
     }
 
@@ -580,4 +586,8 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField labelSelectedXmlFile;
     private javax.swing.JLabel labelXmlFilePath;
     // End of variables declaration//GEN-END:variables
+
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("Refresh.png")));        
+    }
 }
