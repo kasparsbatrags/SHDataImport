@@ -7,6 +7,9 @@
         <Property name="persistenceUnit" type="java.lang.String" value="storeHausImportPU"/>
       </Properties>
       <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory(&quot;storeHausImportPU&quot;).createEntityManager()"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="try{"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="}catch (Exception e) {&#xa;    JOptionPane.showMessageDialog(null,&quot;K&#x13c;&#x16b;da piesl&#x113;dzoties datu b&#x101;zei! &quot;+e.getMessage());&#xa;}"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
       </AuxValues>
     </Component>

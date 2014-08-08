@@ -128,7 +128,7 @@ public class mainFrame extends javax.swing.JFrame {
     public mainFrame() {
         initComponents();
         setIcon();
-        
+        setTitle("StoreHouse dokumentu imports sistēmā Grāls v.1.0");
            
     }
 
@@ -418,12 +418,12 @@ public class mainFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,"Kļūda StoreHausFile! "+ex.getMessage());
+        } finally {
+            storehausimport.mainFrame.addToLog("Imports pabeigts!");
+            JOptionPane.showMessageDialog(null,"Beidzu!");
+            this.buttonPrintProcessInfo.setEnabled(PanelProcessInfo.getDocument().getLength()>0);
+            this.buttonSaveProcessInfo.setEnabled(PanelProcessInfo.getDocument().getLength()>0);
         }
-        storehausimport.mainFrame.addToLog("Imports pabeigts veiksmīgi!");
-        JOptionPane.showMessageDialog(null,"Importu pabeidzu!");
-        this.buttonPrintProcessInfo.setEnabled(PanelProcessInfo.getDocument().getLength()>0);
-        this.buttonSaveProcessInfo.setEnabled(PanelProcessInfo.getDocument().getLength()>0);
-          
         
     }//GEN-LAST:event_buttonImportDataActionPerformed
 
@@ -588,6 +588,12 @@ public class mainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void setIcon() {
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("Refresh.png")));        
+        try{
+            setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("Refresh.png")));        
+         } catch (Exception ex) {
+            Logger.getLogger(mainFrame.class.getName()).log(Level.SEVERE, null, ex);            
+         }
+             
+        
     }
 }

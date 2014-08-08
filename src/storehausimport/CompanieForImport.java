@@ -66,18 +66,23 @@ public class CompanieForImport extends javax.swing.JFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        gralsEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
-        firmasQuery = java.beans.Beans.isDesignTime() ? null : gralsEntityManager.createQuery("SELECT f FROM Firmas f order by f.nosaukums");
-        firmasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : firmasQuery.getResultList();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableListOfCompany = new javax.swing.JTable(){;
-            private static final long serialVersionUID = 1L;
-            public boolean isCellEditable(int row, int column) {
-                return false;
+        try{
+            gralsEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+            firmasQuery = java.beans.Beans.isDesignTime() ? null : gralsEntityManager.createQuery("SELECT f FROM Firmas f order by f.nosaukums");
+            firmasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : firmasQuery.getResultList();
+            jScrollPane1 = new javax.swing.JScrollPane();
+            jTableListOfCompany = new javax.swing.JTable(){;
+                private static final long serialVersionUID = 1L;
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                };
             };
-        };
-        buttonClose = new javax.swing.JButton();
-        buttonAcept = new javax.swing.JButton();
+            buttonClose = new javax.swing.JButton();
+            buttonAcept = new javax.swing.JButton();
+
+        }catch (Exception e) {
+            JOptionPane.showMessageDialog(null,"Kļūda pieslēdzoties datu bāzei! "+e.getMessage());
+        }
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Izvēlieties firmu, kurā importēsiet dokumentus");
@@ -258,6 +263,11 @@ public class CompanieForImport extends javax.swing.JFrame {
         entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
         
         Map properties = new HashMap();
+//        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
+//        properties.put("javax.persistence.jdbc.user", "postgres");
+//        properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+//        properties.put("javax.persistence.jdbc.password", "1");
+
         properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://192.168.11.11:5432/"+companieForImport.getFirma());
         properties.put("javax.persistence.jdbc.user", "grals");
         properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");

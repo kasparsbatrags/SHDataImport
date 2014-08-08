@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +53,8 @@ public class StoreHausFile {
     private String docScode;
     private int docSbident;
     private int docMbident;
+    private final SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+    private Calendar cal;  
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -66,6 +69,7 @@ public class StoreHausFile {
     }
 
     StoreHausFile(String xmlFileWithFullPath) throws ParserConfigurationException, SAXException, IOException {
+        this.cal = Calendar.getInstance();
         this.fXmlFile = new File(xmlFileWithFullPath);
         this.dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -241,7 +245,8 @@ public class StoreHausFile {
             String docSenderName,
             String docDirection,
             String docSenderCode,
-            Date docPayDate
+            Date docPayDate,
+            String docNotes
     ) throws Exception {
 
         if (companyEntityManager == null) {
@@ -344,6 +349,26 @@ public class StoreHausFile {
                     document.setOp("SU");
                     document.setKontets(Boolean.FALSE);
                     document.setPamatoj("Importēts no StoreHaus " + new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
+                    document.setAgents("");
+                    document.setPiezime(docNotes);
+                    document.setMaksas("");
+                    document.setMkodss("");
+                    document.setSanems("");
+                    document.setSkodss("");
+                    document.setStruktura("");
+                    document.setSidents(Long.parseLong("0"));
+                    document.setMidents(Long.parseLong("0"));
+                    document.setMerkis("");
+                    document.setLigums(Long.parseLong("0"));
+                    document.setRekPvn("");
+                    document.setPriority("");
+                    document.setCharges("");
+                    document.setSektors("");
+                    document.setAvNum("");
+                    document.setApmVeids("");
+                    document.setLigPiez("");
+                    
+
                     companyEntityManager.persist(document);
                     thisTransaction.commit();
                     storehausimport.mainFrame.addToLog("Pievienots dokumentu Nr. "+docNumber + docNumberAfix);
@@ -362,6 +387,10 @@ public class StoreHausFile {
                         sadale.setSumma(docSum);
                         sadale.setDatums(docDate);
                         sadale.setSummaV(null);
+                        sadale.setNoS("");
+                        sadale.setUzS("");
+                        sadale.setKlients("");
+                        sadale.setSummaV(BigDecimal.valueOf(0));
                         companyEntityManager.persist(sadale);
                         thisTransaction.commit();
                         storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" kontējumu debets:"+
@@ -386,10 +415,20 @@ public class StoreHausFile {
                     sadale.setSumma(docSum);
                     sadale.setDatums(docDate);
                     sadale.setSummaV(null);
+                    sadale.setNoS("");
+                    sadale.setUzS("");
+                    sadale.setKlients("");
+                    sadale.setSummaV(BigDecimal.valueOf(0));
+                    
                     companyEntityManager.persist(sadale);
                     BigDecimal docNewSum = thisDoc.getSumma().add(docSum);
                     thisDoc.setSumma(docNewSum);
                     thisDoc.setSummaV(docNewSum);
+                    if (!docNotes.isEmpty()){
+                        String newPiezime=thisDoc.getPiezime();
+                        newPiezime=newPiezime.isEmpty()?newPiezime:newPiezime+", "+docNotes;
+                        thisDoc.setPiezime(newPiezime);
+                    }
                     thisTransaction.commit();
                     storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" ar kontējumu debets:"+
                             docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum);
@@ -424,6 +463,10 @@ public class StoreHausFile {
         String docDirection = "";
         String docSenderCode = "";
         Date docPayDate = null;
+        String docSumText="";
+        String docPayDateText="";
+        String docDateText="";
+        String docNotes="";
 
         if (nDocumentsList.getLength() == 0) {
             throw new Exception("Failā nav neviena dokumenta!");
@@ -441,34 +484,92 @@ public class StoreHausFile {
                 Node nDocumentRowNode = nReportDocsList.item(tempDocRows);
                 if (nDocumentRowNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nDocumentRowNode;
-                    String docDateText = eElement.getElementsByTagName("t113.3.7").item(0).getTextContent();
-                    if (!docDateText.isEmpty()) {
-                        docDate = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault()).parse(docDateText);
+                    try {
+                        docDateText = eElement.getElementsByTagName("t113.3.7").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst dokumenta valūta - tags: 't100.3.10'");
                     }
-                    docCurrency = eElement.getElementsByTagName("t100.3.10").item(0).getTextContent();
-                    docNumber = eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
-                    docDebetAccont = eElement.getElementsByTagName("t106.3.1").item(0).getTextContent();
-                    docCreditAccont = eElement.getElementsByTagName("t106.3.2").item(0).getTextContent();
-                    String docSumText = eElement.getElementsByTagName("t0.1.4").item(0).getTextContent();
+                    
+                    if (!docDateText.isEmpty ()) {
+                        docDate=dateFormat.parse(docDateText);
+                    }
+                    try{
+                        docCurrency = eElement.getElementsByTagName("t100.3.10").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst dokumenta valūta - tags: 't100.3.10'");
+                    }
+                    try{
+                        docNumber = eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst dokumenta Nr. - tags: 't113.4.7'");
+                    }
+
+                    try{
+                        docDebetAccont = eElement.getElementsByTagName("t106.3.1").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst konts debetā - tags: 't106.3.1'");
+                    }
+                    try {
+                        docCreditAccont = eElement.getElementsByTagName("t106.3.2").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst konts kredītā - tags: 't106.3.2'");
+                    }
+                    try {
+                        docSumText = eElement.getElementsByTagName("t0.1.4").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst kontējuma summa  - tags: 't0.1.4'");
+                    }
                     if (!docSumText.isEmpty()) {
                         docSum = new BigDecimal(docSumText.replaceAll(",", ""));
                     }
-                    docReceiverName = eElement.getElementsByTagName("t102.4.9").item(0).getTextContent();
-                    if (docReceiverName.endsWith(selectedCompanyData.getKlients())) {
-                        docDirection = "IEE";
-                    } else {
-                        docDirection = "IZE";
+                    try {
+                        docReceiverName = eElement.getElementsByTagName("t102.4.9").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst sanēmēja nosaukums  - tags: 't102.4.9'");
                     }
-                    docSenderName = eElement.getElementsByTagName("t102.4.8").item(0).getTextContent();
-                    docSenderCode = eElement.getElementsByTagName("t102.3.8").item(0).getTextContent();
-
-                    String docPayDateText = eElement.getElementsByTagName("t113.16.7").item(0).getTextContent();
-                    if (!docPayDateText.isEmpty()) {
-                        docPayDate = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault()).parse(docPayDateText);
+                    
+                    //if (docReceiverName.endsWith(selectedCompanyData.getKlients())) {
+                        docDirection = "IEE";
+                    //} else {
+                    //     docDirection = "IZE";
+                    // }
+                    try {
+                        docSenderName = eElement.getElementsByTagName("t102.4.8").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst nosūtītāja nosaukums  - tags: 't102.4.8'");
                     }
                     try {
+                        docSenderCode = eElement.getElementsByTagName("t102.3.8").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        throw new Exception("Trūkst nosūtītāja reģistrācijas Nr. - tags: 't102.3.8");
+                    }
+
+                    try {
+                        docPayDateText = eElement.getElementsByTagName("t113.16.7").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        //throw new Exception("Trūkst apmaksas datums - tags: 't113.16.7");
+                        storehausimport.mainFrame.addToLog("Dokumentam dokumenta Nr. "+docNumber + docNumberAfix+" trūkst apmaksas datums - importēju dokumenta datumu+ 10dienas");
+                    }
+                    if (!docPayDateText.isEmpty()) {
+                        docPayDate = dateFormat.parse(docPayDateText);
+                    } else {
+                        docPayDate = dateFormat.parse(docDateText);
+                        cal.setTime(docPayDate);  
+                        cal.add(Calendar.DATE, 10); 
+                        docPayDate=cal.getTime();
+                    }
+
+                    try {
+                        docNotes = eElement.getElementsByTagName("t219.2.3").item(0).getTextContent();
+                    } catch (Exception ex) {
+                        docNotes="";
+                    }
+                    
+                    
+                    
+                    try {
                         insertDocument(docCurrency, docDate, docNumber, docDebetAccont, docCreditAccont, docSum,
-                                docReceiverName, docSenderName, docDirection, docSenderCode, docPayDate);
+                                docReceiverName, docSenderName, docDirection, docSenderCode, docPayDate,docNotes);
                     } catch (Exception ex) {
                         throw new Exception(ex);
                     }
