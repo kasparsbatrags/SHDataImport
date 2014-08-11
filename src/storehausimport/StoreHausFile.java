@@ -465,8 +465,8 @@ public class StoreHausFile {
                     storehausimport.mainFrame.addToLog(docNumber + docNumberAfix+" pievienots kontējums, debetā "+
                             docDebetAccont+ " kredītā "+docCreditAccont+" summa:"+docSum);
                 }
-                if (previosDocIdents!=docIdents) {
-                    storehausimport.mainFrame.addToLog("Npievienots, jo "+docNumber + docNumberAfix+" jau eksistē sistēmā - netika pievienots");
+                if (previosDocIdents!=docIdents && existRecordInSadale || previosDocIdents==null) {
+                    storehausimport.mainFrame.addToLog("Nepievienots, jo "+docNumber + docNumberAfix+" jau eksistē sistēmā - netika pievienots");
                     previosDocIdents=docIdents;
                 }
                 
