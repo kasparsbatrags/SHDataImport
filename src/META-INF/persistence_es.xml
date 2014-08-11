@@ -17,6 +17,7 @@
     <class>entity.Sadale</class>
     <class>entity.Klienti</class>
     <class>entity.KlBanka</class>
+    <class>entity.Konti</class>    
   </persistence-unit>
   
 </persistence>

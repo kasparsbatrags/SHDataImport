@@ -7,6 +7,7 @@ package storehausimport;
 
 import entity.Gramata;
 import entity.Klienti;
+import entity.Konti;
 import entity.Sadale;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
@@ -54,7 +54,8 @@ public class StoreHausFile {
     private int docSbident;
     private int docMbident;
     private final SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
-    private Calendar cal;  
+    private final Calendar cal;  
+    private Long previosDocIdents;
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -124,7 +125,7 @@ public class StoreHausFile {
         } catch (Exception e) {
             throw new Exception(e);
         }
-        if (existDocumentList.size() != 0) {
+        if (!existDocumentList.isEmpty()) {
             if (existDocumentList.size() == 1) {
                 thisDoc = (Gramata) existDocumentList.get(0);
                 return thisDoc.getIdent();
@@ -315,6 +316,7 @@ public class StoreHausFile {
                         throw new Exception(ex.getMessage());
                     }
                     thisTransaction.begin();
+                    storehausimport.mainFrame.addToLog("---------------");
                     Query q = companyEntityManager.createNativeQuery("select nextval('gramata_ident_seq')");
                     docIdents = (Long) q.getSingleResult();
                     Gramata document = new Gramata();
@@ -327,6 +329,18 @@ public class StoreHausFile {
                     document.setSumma(docSum);
                     document.setSummaV(docSum);
                     document.setKurss(new BigDecimal("1"));
+                    
+                    
+                    
+                    if (docPayDate==null) {
+                        cal.setTime(docDate);  
+                        cal.add(Calendar.DATE, 10); 
+                        docPayDate=cal.getTime();
+                        storehausimport.mainFrame.addToLog("Dokumentam dokumenta Nr. "+docNumber + docNumberAfix+" trūkst apmaksas datums - importēju dokumenta datumu + 10 dienas");
+                    }
+
+                    
+                    
                     document.setApmDat(docPayDate);
                     document.setADatums(new Date());
                     document.setDTips(docDirection);
@@ -345,8 +359,8 @@ public class StoreHausFile {
                     document.setDarVeids("A");
                     document.setTimeIns(new Date());
                     document.setIevDat(new Date());
-                    document.setIevOp("SU");
-                    document.setOp("SU");
+                    document.setIevOp("");
+                    document.setOp("");
                     document.setKontets(Boolean.FALSE);
                     document.setPamatoj("Importēts no StoreHaus " + new SimpleDateFormat("dd.mm.yyyy HH:mm:ss").format(new Date()));
                     document.setAgents("");
@@ -355,7 +369,25 @@ public class StoreHausFile {
                     document.setMkodss("");
                     document.setSanems("");
                     document.setSkodss("");
-                    document.setStruktura("");
+                    String searchNameOfAccount="";
+                    String structureName=""; 
+                    if (docDebetAccont.substring(0,3).equalsIgnoreCase("213")) {
+                        searchNameOfAccount=docDebetAccont;
+                    } 
+                    if (docCreditAccont.substring(0, 3).equalsIgnoreCase("213")){
+                        searchNameOfAccount=docCreditAccont;
+                    }
+                    if (!searchNameOfAccount.isEmpty()){
+                        try {
+                            List<Konti> konti = companyEntityManager.createNamedQuery("Konti.findByKonts")
+                                .setParameter("konts", searchNameOfAccount)
+                                .getResultList();
+                            structureName = konti.get(0).getVards();
+                        } catch (Exception exs) {
+                        }
+                    }
+
+                    document.setStruktura(structureName);
                     document.setSidents(Long.parseLong("0"));
                     document.setMidents(Long.parseLong("0"));
                     document.setMerkis("");
@@ -371,7 +403,7 @@ public class StoreHausFile {
 
                     companyEntityManager.persist(document);
                     thisTransaction.commit();
-                    storehausimport.mainFrame.addToLog("Pievienots dokumentu Nr. "+docNumber + docNumberAfix);
+                    storehausimport.mainFrame.addToLog(docNumber + docNumberAfix+" pievienots.");
                     try {
                         existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                     } catch (Exception ex) {
@@ -393,13 +425,13 @@ public class StoreHausFile {
                         sadale.setSummaV(BigDecimal.valueOf(0));
                         companyEntityManager.persist(sadale);
                         thisTransaction.commit();
-                        storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" kontējumu debets:"+
-                            docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum);
+                        storehausimport.mainFrame.addToLog(docNumber + docNumberAfix+" pievienots kontējums, debetā "+
+                            docDebetAccont+ " kredītā:"+docCreditAccont+" summa:"+docSum);
 
                     }
                 }
             } else {
-                storehausimport.mainFrame.addToLog("Dokuments Nr. "+docNumber + docNumberAfix+" jau eksistē sistēmā - netika pievienots");
+               
                 try {
                     existRecordInSadale = checkExistRecordInSadale(docIdents, docDebetAccont, docCreditAccont, docDate, docSum);
                 } catch (Exception ex) {
@@ -430,13 +462,17 @@ public class StoreHausFile {
                         thisDoc.setPiezime(newPiezime);
                     }
                     thisTransaction.commit();
-                    storehausimport.mainFrame.addToLog("Pievienots dokumenta Nr. "+docNumber + docNumberAfix+" ar kontējumu debets:"+
-                            docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum);
-                    
-                } else {
-                    storehausimport.mainFrame.addToLog("Kontējums dokumentam Nr. "+docNumber + docNumberAfix+" debets:"+
-                            docDebetAccont+ " kredīts:"+docCreditAccont+" summa:"+docSum+" jau eksistē sistēmā - netika pievienots");
-                    
+                    storehausimport.mainFrame.addToLog(docNumber + docNumberAfix+" pievienots kontējums, debetā "+
+                            docDebetAccont+ " kredītā "+docCreditAccont+" summa:"+docSum);
+                }
+                if (previosDocIdents!=docIdents) {
+                    storehausimport.mainFrame.addToLog("Npievienots, jo "+docNumber + docNumberAfix+" jau eksistē sistēmā - netika pievienots");
+                    previosDocIdents=docIdents;
+                }
+                
+                if (existRecordInSadale) {
+                    storehausimport.mainFrame.addToLog("Nepievienots, jo "+docNumber + docNumberAfix+" kontējums debetā "+
+                    docDebetAccont+ " kredītā " +docCreditAccont+" summa: "+docSum+" jau ir sistēmā");
                 }
             }
         } catch (Exception ex) {
@@ -491,7 +527,7 @@ public class StoreHausFile {
                     }
                     
                     if (!docDateText.isEmpty ()) {
-                        docDate=dateFormat.parse(docDateText);
+                        docDate=dateFormat.parse(docDateText);  
                     }
                     try{
                         docCurrency = eElement.getElementsByTagName("t100.3.10").item(0).getTextContent();
@@ -548,17 +584,7 @@ public class StoreHausFile {
                         docPayDateText = eElement.getElementsByTagName("t113.16.7").item(0).getTextContent();
                     } catch (Exception ex) {
                         //throw new Exception("Trūkst apmaksas datums - tags: 't113.16.7");
-                        storehausimport.mainFrame.addToLog("Dokumentam dokumenta Nr. "+docNumber + docNumberAfix+" trūkst apmaksas datums - importēju dokumenta datumu+ 10dienas");
                     }
-                    if (!docPayDateText.isEmpty()) {
-                        docPayDate = dateFormat.parse(docPayDateText);
-                    } else {
-                        docPayDate = dateFormat.parse(docDateText);
-                        cal.setTime(docPayDate);  
-                        cal.add(Calendar.DATE, 10); 
-                        docPayDate=cal.getTime();
-                    }
-
                     try {
                         docNotes = eElement.getElementsByTagName("t219.2.3").item(0).getTextContent();
                     } catch (Exception ex) {

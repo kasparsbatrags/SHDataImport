@@ -82,7 +82,7 @@ public class mainFrame extends javax.swing.JFrame {
 
     public static void addToLog(String message){
         try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ImportLog_"+logFileIndex+".txt", true)))) {
-            out.println(message+System.lineSeparator());
+            out.println(message);
             //out.close();
         }catch (IOException e) {
             JOptionPane.showMessageDialog(null,"Kļūda saglabājot žurnālēšanas failu! "+e.getMessage());
