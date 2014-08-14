@@ -30,6 +30,10 @@ public class CompanieForImport extends javax.swing.JFrame {
     public EntityManager selectedCompanyEntityManager=null;
     public entity.Firmas companieForImport=null;
     public entity.Klienti selectedCompanyData=null;
+    private String serverHost;
+    private String serverPort;
+    private String serverUser;
+    private String serverPassword;
 
     public Object getSelectedCompanyData() {
         return selectedCompanyData;
@@ -261,17 +265,42 @@ public class CompanieForImport extends javax.swing.JFrame {
             return;
         }
         entity.Firmas companieForImport =  firmasList.get(jTableListOfCompany.convertRowIndexToModel(selected[0]));
+
+        try {
+            serverHost=mainFrame.readGralsIni("sql", "server");
+            serverPort=mainFrame.readGralsIni("sql", "port");
+            serverUser=mainFrame.readGralsIni("sql", "uid");
+            serverPassword=mainFrame.readGralsIni("sql", "password");
+        } catch (Exception  ex)  {
+            throw new Exception(ex.getMessage());
+        }
+        if (serverHost.isEmpty()){
+            throw new Exception("Neizdevās noslīt no Grals.ini mainigo:server");
+        }
+        if (serverPort.isEmpty()){
+            throw new Exception("Neizdevās noslīt no Grals.ini mainigo:port");
+        }
+        if (serverUser.isEmpty()){
+            throw new Exception("Neizdevās noslīt no Grals.ini mainigo:uid");
+        }
+        if (serverPassword.isEmpty()){
+            throw new Exception("Neizdevās noslīt no Grals.ini mainigo:password");
+        }
         
         Map properties = new HashMap();
+        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://"+serverHost+":"+serverPort+"/"+companieForImport.getFirma());
+        properties.put("javax.persistence.jdbc.user", serverUser);
+        properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+        properties.put("javax.persistence.jdbc.password", serverPassword);
 //        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://localhost:5432/"+companieForImport.getFirma());
 //        properties.put("javax.persistence.jdbc.user", "postgres");
 //        properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
 //        properties.put("javax.persistence.jdbc.password", "1");
 
-        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://192.168.11.11:5432/"+companieForImport.getFirma());
-        properties.put("javax.persistence.jdbc.user", "grals");
-        properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
-        properties.put("javax.persistence.jdbc.password", "79ENwAjUpXxls3Dh6RXo");
+//        properties.put("javax.persistence.jdbc.url", "jdbc:postgresql://192.168.11.11:5432/"+companieForImport.getFirma());
+//        properties.put("javax.persistence.jdbc.user", "grals");
+//        properties.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+//        properties.put("javax.persistence.jdbc.password", "79ENwAjUpXxls3Dh6RXo");
         try {
             selectedCompanyEntityManager=javax.persistence.Persistence.createEntityManagerFactory("selectedCompanyPU", properties).createEntityManager();
         } catch (PersistenceException  ex)  {

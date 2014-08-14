@@ -5,10 +5,10 @@
     <class>entity.Useri</class>
     <class>entity.Firmas</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/grals"/>
-      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.11.11:5432/grals"/>
+      <property name="javax.persistence.jdbc.user" value="grals"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="1"/>
+      <property name="javax.persistence.jdbc.password" value="79ENwAjUpXxls3Dh6RXo"/>
     </properties>
   </persistence-unit>
   <persistence-unit name="selectedCompanyPU" transaction-type="RESOURCE_LOCAL">
@@ -17,7 +17,7 @@
     <class>entity.Sadale</class>
     <class>entity.Klienti</class>
     <class>entity.KlBanka</class>
-    <class>entity.Konti</class>    
+    <class>entity.Konti</class>
   </persistence-unit>
   
 </persistence>

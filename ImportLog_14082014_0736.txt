@@ -1,0 +1,20 @@
+Izvēlēta firma: COFFEE INN, SIA datu importēšanai.
+Izvēlēts fails: C:\Users\Kaspars\Desktop\sh\PPR 17.08.2014.xml, no kura tiks importēti dokumenti.
+Informācija par failu: StoreHaus sistēmas dokuments ar id65554
+Account register from2014.08.01.
+Dokuments sagatavots: 2014.08.07. 17:27:39
+Kopējais grāmatojumu skaits:9
+
+Nepievienots, jo 1244689_SH jau eksistē sistēmā - netika pievienots
+Nepievienots, jo 1244689_SH kontējums debetā 21310 kredītā 2382 summa: 11 jau ir sistēmā
+Nepievienots, jo 1244689_SH kontējums debetā 75510 kredītā 2382 summa: 2 jau ir sistēmā
+Nepievienots, jo 1244689_SH kontējums debetā 57252 kredītā 2382 summa: 2.73 jau ir sistēmā
+Nepievienots, jo 12456_SH jau eksistē sistēmā - netika pievienots
+Nepievienots, jo 12456_SH kontējums debetā 21310 kredītā 26223 summa: 28 jau ir sistēmā
+Nepievienots, jo 12456_SH kontējums debetā 75510 kredītā 26223 summa: 2 jau ir sistēmā
+Nepievienots, jo 12456_SH kontējums debetā 57252 kredītā 26223 summa: 6.3 jau ir sistēmā
+Nepievienots, jo TEST-0014566_SH jau eksistē sistēmā - netika pievienots
+Nepievienots, jo TEST-0014566_SH kontējums debetā 21310 kredītā 5311 summa: 37 jau ir sistēmā
+Nepievienots, jo TEST-0014566_SH kontējums debetā 75510 kredītā 5311 summa: 10 jau ir sistēmā
+Nepievienots, jo TEST-0014566_SH kontējums debetā 57252 kredītā 5311 summa: 9.87 jau ir sistēmā
+Imports pabeigts!

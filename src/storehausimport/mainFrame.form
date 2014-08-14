@@ -27,14 +27,14 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="jButton1" min="-2" pref="105" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Group type="102" attributes="0">
@@ -66,6 +66,10 @@
                           <Component id="jScrollPane2" alignment="1" pref="485" max="32767" attributes="0"/>
                       </Group>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="buttonChoseGralsIni" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -74,7 +78,9 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              <Component id="buttonChoseGralsIni" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="labelSelectedCompany" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jtextSelectedCompany" alignment="3" max="32767" attributes="0"/>
@@ -197,6 +203,7 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Izv&#x113;l&#x113;ties firmu"/>
         <Property name="toolTipText" type="java.lang.String" value="Izv&#x113;l&#x113;tiesfirmu, kur&#x101; import&#x113;siet dokumentus"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChooseCompanyActionPerformed"/>
@@ -263,6 +270,19 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JButton()"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="buttonPrintProcessInfo.setVisible(false);"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="buttonChoseGralsIni">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Izv&#x113;lieties Gr&#x101;ls ini failu"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChoseGralsIniActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JToggleButton()"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="mainFrame.this.buttonChooseCompany.setEnabled(!buttonChoseGralsIni.isVisible());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="buttonChoseGralsIni.setVisible(!inifile.isFile() &amp;&amp; !checkIsIniOk());"/>
       </AuxValues>
     </Component>
   </SubComponents>

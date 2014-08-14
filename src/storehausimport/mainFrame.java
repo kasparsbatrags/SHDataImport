@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,8 @@ import static javax.swing.JFileChooser.OPEN_DIALOG;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Wini;
 import org.xml.sax.SAXException;
 
 /*
@@ -51,7 +54,7 @@ import org.xml.sax.SAXException;
  * @author Kaspars
  */
 public class mainFrame extends javax.swing.JFrame {
-    
+    public static File inifile = new File("SHDataImport.ini");
     JFileChooser chooser = new JFileChooser();
     public String xmlFileWithFullPath;
     public String selectedCompanyText;
@@ -62,6 +65,8 @@ public class mainFrame extends javax.swing.JFrame {
     private static FileReader inputProcessLogFile = null;
     private static BufferedReader logFileBufferReader;
     private Component saveFileFrame;
+    private boolean isIniOk;
+    public String gralsIniPath="";
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -157,6 +162,7 @@ public class mainFrame extends javax.swing.JFrame {
         PanelProcessInfo = new javax.swing.JTextPane();
         buttonSaveProcessInfo = new javax.swing.JButton();
         buttonPrintProcessInfo = new javax.swing.JButton();
+        buttonChoseGralsIni = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(779, 472));
@@ -216,6 +222,7 @@ public class mainFrame extends javax.swing.JFrame {
 
         buttonChooseCompany.setText("Izvēlēties firmu");
         buttonChooseCompany.setToolTipText("Izvēlētiesfirmu, kurā importēsiet dokumentus");
+        buttonChooseCompany.setEnabled(false);
         buttonChooseCompany.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonChooseCompanyActionPerformed(evt);
@@ -258,17 +265,26 @@ public class mainFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonChoseGralsIni.setVisible(!inifile.isFile() && !checkIsIniOk());
+        buttonChoseGralsIni.setText("Izvēlieties Grāls ini failu");
+        mainFrame.this.buttonChooseCompany.setEnabled(!buttonChoseGralsIni.isVisible());
+        buttonChoseGralsIni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonChoseGralsIniActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
@@ -291,13 +307,18 @@ public class mainFrame extends javax.swing.JFrame {
                             .addComponent(jtextSelectedCompany, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                             .addComponent(labelSelectedXmlFile)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonChoseGralsIni)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(12, 12, 12)
+                .addComponent(buttonChoseGralsIni)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelSelectedCompany)
                     .addComponent(jtextSelectedCompany)
@@ -529,6 +550,28 @@ public class mainFrame extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_buttonPrintProcessInfoActionPerformed
 
+    private void buttonChoseGralsIniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChoseGralsIniActionPerformed
+        // TODO add your handling code here:
+                JFileChooser iniChooser = new JFileChooser();
+                try {
+                    
+                    FileNameExtensionFilter iniFilter = new FileNameExtensionFilter("ini - Grāls sistēmas konfigurācijas fails", "ini");
+                    iniChooser.setFileFilter(iniFilter);
+                    iniChooser.setApproveButtonText("Izvēlēties failu");
+                    iniChooser.setApproveButtonMnemonic('a');
+                    iniChooser.setDialogTitle("Izvēlaties Grāls konfigurācijas failu!");
+                    iniChooser.setDialogType(OPEN_DIALOG);
+                    iniChooser.setApproveButtonToolTipText("Apstipriniet!");
+                    int iniReturnVal = iniChooser.showOpenDialog(mainFrame.this);
+                    if(iniReturnVal == JFileChooser.APPROVE_OPTION) {
+                        this.writeIni(iniChooser);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Neizdevās izveidot ini failu.\n Kļūda: "+ex.getMessage());
+                }
+        
+    }//GEN-LAST:event_buttonChoseGralsIniActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -573,6 +616,7 @@ public class mainFrame extends javax.swing.JFrame {
     private static javax.swing.JTextPane PanelProcessInfo;
     private javax.swing.JButton buttonChooseCompany;
     private javax.swing.JButton buttonChoseFile;
+    private javax.swing.JToggleButton buttonChoseGralsIni;
     private javax.swing.JButton buttonImportData;
     private javax.swing.JButton buttonPrintProcessInfo;
     private javax.swing.JButton buttonSaveProcessInfo;
@@ -595,5 +639,63 @@ public class mainFrame extends javax.swing.JFrame {
          }
              
         
+    }
+    
+    private boolean checkIsIniOk() {
+        if (!inifile.isFile()){
+            return false;
+        }
+        try {
+            Wini ini = new Wini(inifile);
+            gralsIniPath=ini.get("main", "GralsIniPath", String.class);
+            if (gralsIniPath.isEmpty()){
+                return false;
+            }
+        } catch (InvalidFileFormatException e) {
+             JOptionPane.showMessageDialog(null, "Nepareizs ini faila formāts.\n Kļūda: "+e.getMessage());
+        } catch (IOException e) {
+             JOptionPane.showMessageDialog(null, "Nevaru nolasīt ini failu: "+inifile.toString()+"\n Kļūda: "+e.getMessage());
+            
+        }
+        return true;
+           
+    }
+    private void writeIni(JFileChooser iniChooser) throws IOException{
+        try {
+            PrintWriter writer = new PrintWriter(inifile, "UTF-8");
+            writer.close();
+            Wini ini = new Wini(inifile);
+            ini.put("main", "GralsIniPath",iniChooser.getSelectedFile().toString());
+            ini.store();
+            if (this.checkIsIniOk()){
+                mainFrame.this.buttonChoseGralsIni.setVisible(false);
+                mainFrame.this.buttonChooseCompany.setEnabled(true);
+            }
+        } catch (InvalidFileFormatException e) {
+             JOptionPane.showMessageDialog(null, "Nepareizs ini faila formāts.\n Kļūda: "+e.getMessage());
+        } catch (Exception e) {
+             JOptionPane.showMessageDialog(null, "Nevaru nolasīt ini failu: "+inifile.toString()+"\n Kļūda: "+e.getMessage());
+            
+        }
+    }
+    public static String readGralsIni(String section,String variable) throws Exception{
+        if (!inifile.isFile()){
+            throw new Exception("Trūkst ini fails: "+inifile.toString());
+        }
+        try {
+            Wini ini = new Wini(inifile);
+            String gralsIniFullPath=ini.get("main", "GralsIniPath", String.class);
+            ini = new Wini(new File(gralsIniFullPath));
+            String readValue= ini.get(section, variable, String.class);
+            if (!readValue.isEmpty()){
+                return readValue;
+            }
+        } catch (InvalidFileFormatException e) {
+             JOptionPane.showMessageDialog(null, "Nepareizs ini faila formāts.\n Kļūda: "+e.getMessage());
+        } catch (IOException e) {
+             JOptionPane.showMessageDialog(null, "Nevaru nolasīt ini failu: "+inifile.toString()+"\n Kļūda: "+e.getMessage());
+            
+        }
+        return "";
     }
 }
