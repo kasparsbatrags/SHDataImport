@@ -7,6 +7,7 @@
 package storehausimport;
 
 import entity.Gramata;
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -25,9 +26,8 @@ public class NewMain {
      */
     public static void main(String[] args) {
         
-        String firma="Lursolkjljljljkljft ,SIA";
-        
-        System.out.println(substring(firma,0,firma.indexOf(",")));
+//       Shortcut scut = Shortcut.loadShortcut(new File("C:\\Users\\Kaspars\\Desktop\93.lnk"));
+
        
         
     }

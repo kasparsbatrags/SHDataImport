@@ -71,7 +71,30 @@ public class CompanieForImport extends javax.swing.JFrame {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         try{
-            gralsEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU").createEntityManager();
+            serverHost=mainFrame.readGralsIni("sql", "server");
+            serverPort=mainFrame.readGralsIni("sql", "port");
+            serverUser=mainFrame.readGralsIni("sql", "uid");
+            serverPassword=mainFrame.readGralsIni("sql", "password");
+
+            if (serverHost.isEmpty()){
+                throw new Exception("Neizdevās noslīt no Grals.ini mainigo:server");
+            }
+            if (serverPort.isEmpty()){
+                throw new Exception("Neizdevās noslīt no Grals.ini mainigo:port");
+            }
+            if (serverUser.isEmpty()){
+                throw new Exception("Neizdevās noslīt no Grals.ini mainigo:uid");
+            }
+            if (serverPassword.isEmpty()){
+                throw new Exception("Neizdevās noslīt no Grals.ini mainigo:password");
+            }
+
+            Map propertiesGralsDB = new HashMap();
+            propertiesGralsDB.put("javax.persistence.jdbc.url", "jdbc:postgresql://"+serverHost+":"+serverPort+"/grals");
+            propertiesGralsDB.put("javax.persistence.jdbc.user", serverUser);
+            propertiesGralsDB.put("javax.persistence.jdbc.driver", "org.postgresql.Driver");
+            propertiesGralsDB.put("javax.persistence.jdbc.password", serverPassword);
+            gralsEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("storeHausImportPU",propertiesGralsDB).createEntityManager();
             firmasQuery = java.beans.Beans.isDesignTime() ? null : gralsEntityManager.createQuery("SELECT f FROM Firmas f order by f.nosaukums");
             firmasList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : firmasQuery.getResultList();
             jScrollPane1 = new javax.swing.JScrollPane();

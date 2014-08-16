@@ -68,6 +68,8 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="buttonChoseGralsIni" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="buttonChoseGralsStartInFolder" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -79,7 +81,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-              <Component id="buttonChoseGralsIni" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="buttonChoseGralsIni" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonChoseGralsStartInFolder" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="labelSelectedCompany" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -275,15 +280,25 @@
     <Component class="javax.swing.JToggleButton" name="buttonChoseGralsIni">
       <Properties>
         <Property name="text" type="java.lang.String" value="Izv&#x113;lieties Gr&#x101;ls ini failu"/>
+        <Property name="toolTipText" type="java.lang.String" value="Nor&#x101;diet Grals.ini faila atra&#x161;an&#x101;s vietu"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChoseGralsIniActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JToggleButton()"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="mainFrame.this.buttonChooseCompany.setEnabled(!buttonChoseGralsIni.isVisible());"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="buttonChoseGralsIni.setVisible(!inifile.isFile() &amp;&amp; !checkIsIniOk());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="mainFrame.this.buttonChooseCompany.setEnabled(!buttonChoseGralsIni.isVisible() &amp;&amp; !buttonChoseGralsStartInFolder.isVisible());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="buttonChoseGralsIni.setVisible(!inifile.isFile() &amp;&amp; checkIsIniOk()&lt;3);&#xa;buttonChoseGralsStartInFolder.setVisible(checkIsIniOk()==2);"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonChoseGralsStartInFolder">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Izv&#x113;lieties Gr&#x101;ls lietot&#x101;ja paramteru failu"/>
+        <Property name="toolTipText" type="java.lang.String" value="Nor&#x101;diet Gr&#x101;ls StartIn mapi un failu pparam.dbf"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonChoseGralsStartInFolderActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
