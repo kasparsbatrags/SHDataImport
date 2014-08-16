@@ -453,9 +453,11 @@ public class mainFrame extends javax.swing.JFrame {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,"Kļūda! \nNeizdevās nolasīt no Grals lietotaja iestatijumiem ciparu skaitu aiz komata!\n"+ex.getMessage()+
                         "\nImporetēšana tiks veikta ar precizitāti 2 cipari aiz komata!");                    
+            }
+            if (digitsAfterDeciaml.isEmpty()){
                 digitsAfterDeciaml="2.0";
             }
-
+            digitsAfterDeciaml=digitsAfterDeciaml.replace(",",".");
             this.PanelProcessInfo.setEnabled(true);
             StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);  
             shf.setCompanyEntityPUEntityManager(companyEntityManager);
@@ -590,7 +592,7 @@ public class mainFrame extends javax.swing.JFrame {
                     iniChooser.setFileFilter(iniFilter);
                     iniChooser.setApproveButtonText("Izvēlēties failu");
                     iniChooser.setApproveButtonMnemonic('a');
-                    iniChooser.setDialogTitle("Izvēlaties Grāls konfigurācijas failu!");
+                    iniChooser.setDialogTitle("Izvēlaties Grāls konfigurācijas failu - grals.ini!");
                     iniChooser.setDialogType(OPEN_DIALOG);
                     iniChooser.setApproveButtonToolTipText("Apstipriniet!");
                     int iniReturnVal = iniChooser.showOpenDialog(mainFrame.this);
@@ -613,7 +615,7 @@ public class mainFrame extends javax.swing.JFrame {
             pparamChooser.setFileFilter(pparamFilter);
             pparamChooser.setApproveButtonText("Izvēlēties failu");
             pparamChooser.setApproveButtonMnemonic('a');
-            pparamChooser.setDialogTitle("Izvēlaties Grāls konfigurācijas failu!");
+            pparamChooser.setDialogTitle("Izvēlaties Grāls lietotāja iestatījumu failu - pparam.dbf!");
             pparamChooser.setDialogType(OPEN_DIALOG);
             pparamChooser.setApproveButtonToolTipText("Apstipriniet!");
             int iniReturnVal = pparamChooser.showOpenDialog(mainFrame.this);
