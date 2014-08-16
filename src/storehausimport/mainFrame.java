@@ -1,26 +1,24 @@
 package storehausimport;
 
+import com.hexiong.jdbf.DBFReader;
 import entity.Klienti;
 import java.awt.Component;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -34,12 +32,12 @@ import javax.print.ServiceUI;
 import javax.print.SimpleDoc;
 import javax.print.attribute.AttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.OPEN_DIALOG;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.ParserConfigurationException;
+import static jdk.nashorn.internal.objects.NativeString.substr;
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Wini;
 import org.xml.sax.SAXException;
@@ -68,7 +66,8 @@ public class mainFrame extends javax.swing.JFrame {
     private Component saveFileFrame;
     private boolean isIniOk;
     public String gralsIniPath="";
-    private String gralsStartInFolder="";
+    private String gralsPparamFile="";
+    public String digitsAfterDeciaml="";
 
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
@@ -136,6 +135,10 @@ public class mainFrame extends javax.swing.JFrame {
         initComponents();
         setIcon();
         setTitle("StoreHouse dokumentu imports sistēmā Grāls v.1.0");
+        try {
+            digitsAfterDeciaml=getPparamValue("KOMA1");
+        } catch (Exception ex) {
+        }
            
     }
 
@@ -444,10 +447,21 @@ public class mainFrame extends javax.swing.JFrame {
     private void buttonImportDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonImportDataActionPerformed
         try {
             // TODO add your handling code here:
+            checkIsIniOk();
+            try {
+                digitsAfterDeciaml=getPparamValue("KOMA1");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null,"Kļūda! \nNeizdevās nolasīt no Grals lietotaja iestatijumiem ciparu skaitu aiz komata!\n"+ex.getMessage()+
+                        "\nImporetēšana tiks veikta ar precizitāti 2 cipari aiz komata!");                    
+                digitsAfterDeciaml="2.0";
+            }
+
             this.PanelProcessInfo.setEnabled(true);
             StoreHausFile shf =new StoreHausFile(xmlFileWithFullPath);  
             shf.setCompanyEntityPUEntityManager(companyEntityManager);
             shf.setSelectedCompanyData(selectedCompanyData);
+            shf.setDigitsAfterDeciaml(Integer.parseInt((String) substr(digitsAfterDeciaml,0,digitsAfterDeciaml.indexOf("."))));
+            
             shf.importAllXmlData();
             
         } catch (ParserConfigurationException | SAXException | IOException ex) {
@@ -690,11 +704,11 @@ public class mainFrame extends javax.swing.JFrame {
         try {
             Wini ini = new Wini(inifile);
             gralsIniPath=ini.get("main", "GralsIniPath", String.class);
-            gralsStartInFolder=ini.get("main", "GralsStartInFolder", String.class);
+            gralsPparamFile=ini.get("main", "GralsStartInFolder", String.class);
             if (gralsIniPath==null){
                 return 1;
             }
-            if (gralsStartInFolder==null){
+            if (gralsPparamFile==null){
                 return 2;
             }
         } catch (InvalidFileFormatException e) {
@@ -753,5 +767,27 @@ public class mainFrame extends javax.swing.JFrame {
             
         }
         return "";
+    }
+    public String getPparamValue(String valuesName) throws Exception{
+        DBFReader dbfreader = new DBFReader(gralsPparamFile);
+        String result="";
+        try {
+            while(dbfreader.hasNextRecord())
+            {
+                Object pparamRecord[]= dbfreader.nextRecord(Charset.forName("GBK"));
+                if (pparamRecord[0].toString().equalsIgnoreCase(valuesName)){
+                    result= (String) pparamRecord[2].toString();
+                    dbfreader.close();
+                    return result;
+               }
+            }
+        } catch (Exception ex) {
+            dbfreader.close();
+            result="";
+        }finally{
+//            pparam.close();  // don't forget to close it!
+        }
+        dbfreader.close();
+        return result;
     }
 }

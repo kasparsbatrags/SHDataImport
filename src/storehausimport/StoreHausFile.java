@@ -12,6 +12,8 @@ import entity.Sadale;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,7 +50,7 @@ public class StoreHausFile {
     private Klienti thisClientInfo;
     private Long docMident;
     private Long docSident;
-    private final String docNumberAfix = "_SH";
+    private final String docNumberAfix = "";
     private String docMcode;
     private String docScode;
     private int docSbident;
@@ -56,7 +58,14 @@ public class StoreHausFile {
     private final SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
     private final Calendar cal;  
     private Long previosDocIdents;
+    public int digitsAfterDeciaml; 
 
+    public void setDigitsAfterDeciaml(int digitsAfterDeciaml) {
+        this.digitsAfterDeciaml = digitsAfterDeciaml;
+    }
+
+
+    
     public Klienti getSelectedCompanyData() {
         return selectedCompanyData;
     }
@@ -254,6 +263,8 @@ public class StoreHausFile {
             throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
+        // uzliek ciparus aiz komata 
+        docSum=docSum.setScale(digitsAfterDeciaml, BigDecimal.ROUND_HALF_UP);
         try {
             try {
                 docIdents = checkDocumentExist(docDate, docNumber);
@@ -329,18 +340,12 @@ public class StoreHausFile {
                     document.setSumma(docSum);
                     document.setSummaV(docSum);
                     document.setKurss(new BigDecimal("1"));
-                    
-                    
-                    
                     if (docPayDate==null) {
                         cal.setTime(docDate);  
                         cal.add(Calendar.DATE, 10); 
                         docPayDate=cal.getTime();
                         storehausimport.mainFrame.addToLog("Dokumentam dokumenta Nr. "+docNumber + docNumberAfix+" trūkst apmaksas datums - importēju dokumenta datumu + 10 dienas");
                     }
-
-                    
-                    
                     document.setApmDat(docPayDate);
                     document.setADatums(new Date());
                     document.setDTips(docDirection);
@@ -369,24 +374,15 @@ public class StoreHausFile {
                     document.setMkodss("");
                     document.setSanems("");
                     document.setSkodss("");
+                    
                     String searchNameOfAccount="";
-                    String structureName=""; 
                     if (docDebetAccont.substring(0,3).equalsIgnoreCase("213")) {
                         searchNameOfAccount=docDebetAccont;
                     } 
                     if (docCreditAccont.substring(0, 3).equalsIgnoreCase("213")){
                         searchNameOfAccount=docCreditAccont;
                     }
-                    if (!searchNameOfAccount.isEmpty()){
-                        try {
-                            List<Konti> konti = companyEntityManager.createNamedQuery("Konti.findByKonts")
-                                .setParameter("konts", searchNameOfAccount)
-                                .getResultList();
-                            structureName = konti.get(0).getVards();
-                        } catch (Exception exs) {
-                        }
-                    }
-
+                    String structureName=getStructureName(searchNameOfAccount); 
                     document.setStruktura(structureName);
                     document.setSidents(Long.parseLong("0"));
                     document.setMidents(Long.parseLong("0"));
@@ -399,8 +395,6 @@ public class StoreHausFile {
                     document.setAvNum("");
                     document.setApmVeids("");
                     document.setLigPiez("");
-                    
-
                     companyEntityManager.persist(document);
                     thisTransaction.commit();
                     storehausimport.mainFrame.addToLog(docNumber + docNumberAfix+" pievienots.");
@@ -419,15 +413,14 @@ public class StoreHausFile {
                         sadale.setSumma(docSum);
                         sadale.setDatums(docDate);
                         sadale.setSummaV(null);
-                        sadale.setNoS("");
-                        sadale.setUzS("");
+                        sadale.setNoS(structureName);
+                        sadale.setUzS(structureName);
                         sadale.setKlients("");
                         sadale.setSummaV(BigDecimal.valueOf(0));
                         companyEntityManager.persist(sadale);
                         thisTransaction.commit();
                         storehausimport.mainFrame.addToLog(docNumber + docNumberAfix+" pievienots kontējums, debetā "+
                             docDebetAccont+ " kredītā:"+docCreditAccont+" summa:"+docSum);
-
                     }
                 }
             } else {
@@ -447,8 +440,16 @@ public class StoreHausFile {
                     sadale.setSumma(docSum);
                     sadale.setDatums(docDate);
                     sadale.setSummaV(null);
-                    sadale.setNoS("");
-                    sadale.setUzS("");
+                    String searchNameOfAccount="";
+                    if (docDebetAccont.substring(0,3).equalsIgnoreCase("213")) {
+                        searchNameOfAccount=docDebetAccont;
+                    } 
+                    if (docCreditAccont.substring(0, 3).equalsIgnoreCase("213")){
+                        searchNameOfAccount=docCreditAccont;
+                    }
+                    String structureName=getStructureName(searchNameOfAccount); 
+                    sadale.setNoS(structureName);
+                    sadale.setUzS(structureName);
                     sadale.setKlients("");
                     sadale.setSummaV(BigDecimal.valueOf(0));
                     
@@ -602,5 +603,22 @@ public class StoreHausFile {
                 }
             }
         }
+    }
+
+    private String getStructureName(String searchNameOfAccount) {
+
+        if (!searchNameOfAccount.isEmpty()){
+            try {
+                List<Konti> konti = companyEntityManager.createNamedQuery("Konti.findByKonts")
+                    .setParameter("konts", searchNameOfAccount)
+                    .getResultList();
+                return konti.get(0).getVards();
+            } catch (Exception wsx) {
+
+            }
+        } else {
+            return "";
+        }
+        return "";
     }
 }
