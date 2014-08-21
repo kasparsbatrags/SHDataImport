@@ -134,7 +134,7 @@ public class mainFrame extends javax.swing.JFrame {
     public mainFrame() {
         initComponents();
         setIcon();
-        setTitle("StoreHouse dokumentu imports sistēmā Grāls v.1.0");
+        setTitle("StoreHouse dokumentu imports sistēmā Grāls v.1.1");
         try {
             digitsAfterDeciaml=getPparamValue("KOMA1");
         } catch (Exception ex) {

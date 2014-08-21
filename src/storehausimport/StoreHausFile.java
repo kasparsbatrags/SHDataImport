@@ -58,7 +58,8 @@ public class StoreHausFile {
     private final SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
     private final Calendar cal;  
     private Long previosDocIdents;
-    public int digitsAfterDeciaml; 
+    public int digitsAfterDeciaml;
+    private String searchNameOfAccount="";
 
     public void setDigitsAfterDeciaml(int digitsAfterDeciaml) {
         this.digitsAfterDeciaml = digitsAfterDeciaml;
@@ -374,8 +375,6 @@ public class StoreHausFile {
                     document.setMkodss("");
                     document.setSanems("");
                     document.setSkodss("");
-                    
-                    String searchNameOfAccount="";
                     if (docDebetAccont.substring(0,3).equalsIgnoreCase("213")) {
                         searchNameOfAccount=docDebetAccont;
                     } 
@@ -440,7 +439,7 @@ public class StoreHausFile {
                     sadale.setSumma(docSum);
                     sadale.setDatums(docDate);
                     sadale.setSummaV(null);
-                    String searchNameOfAccount="";
+//                    String searchNameOfAccount="";
                     if (docDebetAccont.substring(0,3).equalsIgnoreCase("213")) {
                         searchNameOfAccount=docDebetAccont;
                     } 
