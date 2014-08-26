@@ -166,7 +166,9 @@ public class StoreHausFile {
                             .setParameter("klients", clientName)
                             .getResultList();
                 } else {
-                    docSenderCode=docSenderCode.substring(docSenderCode.length() -11);
+                    if (docSenderCode.length()>11){
+                        docSenderCode=docSenderCode.substring(docSenderCode.length() -11);
+                    }
                     clientsList = companyEntityManager.createNamedQuery("Klienti.findByKods")
                             .setParameter("kods", docSenderCode)
                             .getResultList();
