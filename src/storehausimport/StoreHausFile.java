@@ -166,6 +166,7 @@ public class StoreHausFile {
                             .setParameter("klients", clientName)
                             .getResultList();
                 } else {
+                    docSenderCode=docSenderCode.substring(docSenderCode.length() -11);
                     clientsList = companyEntityManager.createNamedQuery("Klienti.findByKods")
                             .setParameter("kods", docSenderCode)
                             .getResultList();
@@ -538,6 +539,7 @@ public class StoreHausFile {
                         docNumber = eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
                     } catch (Exception ex) {
                         throw new Exception("Trūkst dokumenta Nr. - tags: 't113.4.7'");
+                        
                     }
 
                     try{
