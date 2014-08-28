@@ -111,7 +111,7 @@ public class StoreHausFile {
         return message;
     }
 
-    private Long checkDocumentExist(Date documentDate, String documentNumber) throws Exception {
+    private Long checkDocumentExist(Date documentDate, String documentNumber, String docInternalNumber) throws Exception {
         if (documentNumber.isEmpty()) {
             throw new Exception("checkIsDocumentInserted netiek padots parametrs documentNumber\n"
                     + "Restartējiet aplikāciju un meģiniet vēlreiz vai sazinieties ar izstrādātāju");
@@ -127,11 +127,20 @@ public class StoreHausFile {
         }
         List<Gramata> existDocumentList = null;
         try {
-            existDocumentList = companyEntityManager
-                    .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_")
-                    .setParameter("num_", documentNumber + docNumberAfix)
-                    .setParameter("datums_", documentDate)
-                    .getResultList();
+            if (!docInternalNumber.isEmpty()){
+                existDocumentList = companyEntityManager
+                        .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_ and g.avNum = :avNum")
+                        .setParameter("num_", documentNumber + docNumberAfix)
+                        .setParameter("datums_", documentDate)
+                        .setParameter("avNum", docInternalNumber)
+                        .getResultList();
+            } else {
+                existDocumentList = companyEntityManager
+                        .createQuery("select g from Gramata g where g.num= :num_ and g.datums= :datums_")
+                        .setParameter("num_", documentNumber + docNumberAfix)
+                        .setParameter("datums_", documentDate)
+                        .getResultList();
+            }   
         } catch (Exception e) {
             throw new Exception(e);
         }
@@ -252,6 +261,7 @@ public class StoreHausFile {
     private void insertDocument(String docCurrency,
             Date docDate,
             String docNumber,
+            String docInternalNumber,
             String docDebetAccont,
             String docCreditAccont,
             BigDecimal docSum,
@@ -267,11 +277,12 @@ public class StoreHausFile {
             throw new Exception("Funkcijā insertDokument trūkst objekts 'companyEntityManager'. \n "
                     + "Restartējiet aplikāciju un meģiniet vēlreiz");
         }
+        
         // uzliek ciparus aiz komata 
         docSum=docSum.setScale(digitsAfterDeciaml, BigDecimal.ROUND_HALF_UP);
         try {
             try {
-                docIdents = checkDocumentExist(docDate, docNumber);
+                docIdents = checkDocumentExist(docDate, docNumber, docInternalNumber);
             } catch (Exception ex) {
                 throw new Exception(ex.getMessage());
             }
@@ -340,6 +351,7 @@ public class StoreHausFile {
                     document.setDokDat(docDate);
                     document.setSDatums(docDate);
                     document.setNum(docNumber + docNumberAfix);
+                    document.setAvNum(docInternalNumber);
                     document.setValuta(docCurrency);
                     document.setSumma(docSum);
                     document.setSummaV(docSum);
@@ -394,7 +406,6 @@ public class StoreHausFile {
                     document.setPriority("");
                     document.setCharges("");
                     document.setSektors("");
-                    document.setAvNum("");
                     document.setApmVeids("");
                     document.setLigPiez("");
                     companyEntityManager.persist(document);
@@ -506,6 +517,7 @@ public class StoreHausFile {
         String docPayDateText="";
         String docDateText="";
         String docNotes="";
+        String docInternalNumber="";
 
         if (nDocumentsList.getLength() == 0) {
             throw new Exception("Failā nav neviena dokumenta!");
@@ -520,6 +532,22 @@ public class StoreHausFile {
                 throw new Exception("Trūkst informācija par dokumentiem - tags: 'Report_Row'");
             }
             for (int tempDocRows = 0; tempDocRows < nReportDocsList.getLength(); tempDocRows++) {
+                 docCurrency = "";
+                 docDate = null;
+                 docNumber = "";
+                 docDebetAccont = "";
+                 docCreditAccont = "";
+                 docSum = null;
+                 docReceiverName = "";
+                 docSenderName = "";
+                 docDirection = "";
+                 docSenderCode = "";
+                 docPayDate = null;
+                 docSumText="";
+                 docPayDateText="";
+                 docDateText="";
+                 docNotes="";
+                 docInternalNumber="";
                 Node nDocumentRowNode = nReportDocsList.item(tempDocRows);
                 if (nDocumentRowNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nDocumentRowNode;
@@ -538,12 +566,26 @@ public class StoreHausFile {
                         throw new Exception("Trūkst dokumenta valūta - tags: 't100.3.10'");
                     }
                     try{
-                        docNumber = eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
+                        docNumber = eElement.getElementsByTagName("t113.5.7").item(0).getTextContent();
                     } catch (Exception ex) {
-                        throw new Exception("Trūkst dokumenta Nr. - tags: 't113.4.7'");
-                        
+                        docNumber="";
+                        //throw new Exception("Trūkst dokumenta Nr. - tags: 't113.5.7'");
+                        try{
+                            docNumber = eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
+                        } catch (Exception exx) {
+                            docNumber="";
+                            //throw new Exception("Trūkst dokumenta Nr. - tags: 't113.4.7'");
+                        }     
                     }
-
+                    try{
+                        docInternalNumber = eElement.getElementsByTagName("t113.4.7").item(0).getTextContent();
+                    } catch (Exception exx) {
+                        docInternalNumber="";
+                        //throw new Exception("Trūkst dokumenta Nr. - tags: 't113.4.7'");
+                    }     
+                    if (docNumber.equalsIgnoreCase(docInternalNumber))
+                        docInternalNumber="";
+                    
                     try{
                         docDebetAccont = eElement.getElementsByTagName("t106.3.1").item(0).getTextContent();
                     } catch (Exception ex) {
@@ -598,7 +640,7 @@ public class StoreHausFile {
                     
                     
                     try {
-                        insertDocument(docCurrency, docDate, docNumber, docDebetAccont, docCreditAccont, docSum,
+                        insertDocument(docCurrency, docDate, docNumber, docInternalNumber, docDebetAccont, docCreditAccont, docSum,
                                 docReceiverName, docSenderName, docDirection, docSenderCode, docPayDate,docNotes);
                     } catch (Exception ex) {
                         throw new Exception(ex);
