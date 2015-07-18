@@ -287,7 +287,7 @@ public class StoreHausFile {
                 throw new Exception(ex.getMessage());
             }
             thisTransaction = companyEntityManager.getTransaction();
-            if (docIdents != null && (thisDoc.getADatums().compareTo(new Date()) > 0) || docIdents == null) {
+            if (docIdents != null && (thisDoc.getADatums()!=null && thisDoc.getADatums().compareTo(new Date()) > 0) || docIdents == null) {
                 
                 if (docIdents == null) {
 
